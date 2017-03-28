@@ -1,0 +1,991 @@
+\documentclass[12pt,t]{beamer}
+\usepackage{graphicx}
+\setbeameroption{hide notes}
+\setbeamertemplate{note page}[plain]
+
+% get rid of junk
+\usetheme{default}
+\beamertemplatenavigationsymbolsempty
+\hypersetup{pdfpagemode=UseNone} % don't show bookmarks on initial view
+
+% font
+\usepackage{fontspec}
+\setsansfont{TeX Gyre Heros}
+\setbeamerfont{note page}{family*=pplx,size=\footnotesize} % Palatino for notes
+% "TeX Gyre Heros can be used as a replacement for Helvetica"
+% In Unix, unzip the following into ~/.fonts
+% In Mac, unzip it, double-click the .otf files, and install using "FontBook"
+%   http://www.gust.org.pl/projects/e-foundry/tex-gyre/heros/qhv2.004otf.zip
+
+% named colors
+\definecolor{offwhite}{RGB}{249,242,215}
+\definecolor{foreground}{RGB}{255,255,255}
+\definecolor{background}{RGB}{24,24,24}
+\definecolor{title}{RGB}{107,174,214}
+\definecolor{gray}{RGB}{155,155,155}
+\definecolor{subtitle}{RGB}{102,255,204}
+\definecolor{hilight}{RGB}{102,255,204}
+\definecolor{vhilight}{RGB}{255,111,207}
+\definecolor{lolight}{RGB}{155,155,155}
+%\definecolor{green}{RGB}{125,250,125}
+
+% use those colors
+\setbeamercolor{titlelike}{fg=title}
+\setbeamercolor{subtitle}{fg=subtitle}
+\setbeamercolor{institute}{fg=gray}
+\setbeamercolor{normal text}{fg=foreground,bg=background}
+\setbeamercolor{item}{fg=foreground} % color of bullets
+\setbeamercolor{subitem}{fg=gray}
+\setbeamercolor{itemize/enumerate subbody}{fg=gray}
+\setbeamertemplate{itemize subitem}{{\textendash}}
+\setbeamerfont{itemize/enumerate subbody}{size=\footnotesize}
+\setbeamerfont{itemize/enumerate subitem}{size=\footnotesize}
+
+% page number
+\setbeamertemplate{footline}{%
+    \raisebox{5pt}{\makebox[\paperwidth]{\hfill\makebox[20pt]{\color{gray}
+          \scriptsize\insertframenumber}}}\hspace*{5pt}}
+
+% add a bit of space at the top of the notes page
+\addtobeamertemplate{note page}{\setlength{\parskip}{12pt}}
+
+% a few macros
+\newcommand{\bi}{\begin{itemize}}
+\newcommand{\ei}{\end{itemize}}
+\newcommand{\ig}{\includegraphics}
+\newcommand{\subt}[1]{{\footnotesize \color{subtitle} {#1}}}
+
+
+% title info
+\title{Problem solving paradigms}
+\author{Bjarki Ágúst Guðmundsson \\ Tómas Ken Magnússon}
+\institute{\href{http://ru.is/td}{School of Computer Science} \\[2pt] \href{http://ru.is}{Reykjavík University}}
+\date{Árangursrík forritun og lausn verkefna}
+% \date{\href{http://www.biostat.wisc.edu/~kbroman}{\tt \scriptsize biostat.wisc.edu/{\textasciitilde}kbroman}
+% \\[-4pt]
+% \href{http://github.com/kbroman}{\tt \scriptsize github.com/kbroman}
+% }
+
+
+% Tikz
+\usepackage{tikz}
+\usetikzlibrary{arrows,shapes}
+
+% Minted
+\usepackage{minted}
+\usemintedstyle{monokai}
+\newminted{cpp}{fontsize=\footnotesize}
+
+% Graph styles
+\tikzstyle{vertex}=[circle,fill=black!50,minimum size=15pt,inner sep=0pt, font=\small]
+\tikzstyle{selected vertex} = [vertex, fill=red!24]
+\tikzstyle{edge} = [draw,thick,-]
+\tikzstyle{dedge} = [draw,thick,->]
+\tikzstyle{weight} = [font=\scriptsize,pos=0.5]
+\tikzstyle{selected edge} = [draw,line width=2pt,-,red!50]
+\tikzstyle{ignored edge} = [draw,line width=5pt,-,black!20]
+
+
+\begin{document}
+
+% title slide
+{
+    \setbeamertemplate{footline}{} % no page number here
+    \frame{
+        \titlepage
+    }
+}
+
+
+\begin{frame}{Today we're going to cover}
+    \vspace{40pt}
+    \bi
+        \item Problem solving paradigms
+        \item Complete search
+        \item Backtracking
+        \item Divide and conquer
+    \ei
+\end{frame}
+
+\begin{frame}{Example problem}
+    \bi
+        \item Problem C from NWERC 2006: Pie
+    \ei
+\end{frame}
+
+% TODO: Problem solving paradigms, what is that?
+\begin{frame}{Problem solving paradigms}
+    \vspace{40pt}
+    \bi
+        \item What is a problem solving paradigm?
+        \item A method to construct a solution to a specific type of problem
+        % \item One example is "Brute force"
+        %     \bi
+        %         \item the problem asks us to find an object with a specific property (\textit{the problem type})
+        %         \item apply the "Brute force" paradigm: go through all objects, for each of them check if the object has the property, if yes, stop, if no, continue
+        %     \ei
+        % \vspace{10pt}
+        \item Today and in later lectures we will study common problem solving paradigms
+        % \item Each paradigm applies to different kinds of problems
+    \ei
+\end{frame}
+
+% % todo: problem solving paradigms, overview (greedy, dp, ...)
+% \begin{frame}{Problem solving paradigms}
+%     \bi
+%         \item Complete search
+%     \ei
+% \end{frame}
+
+% todo: complete search
+\begin{frame}{Complete search}
+    \vspace{5pt}
+    \bi
+        \item We have a finite set of objects
+        \item We want to find an element in that set which satisfies some constraints
+            \bi
+                \item or find \textbf{all} elements in that set which satisfy some constraints
+            \ei
+
+        \vspace{5pt}
+        \item Simple! Just go through all elements in the set, and for each of them check if they satisify the constraints
+        \item Of course it's not going to be very efficient...
+        \item But remember, we always want the simplest solution that runs in time
+        \item Complete search should be the first problem solving paradigm you think about when you're trying to solve a problem
+    \ei
+\end{frame}
+
+\begin{frame}{Example problem: Vito's family}
+    \bi
+        \item http://uva.onlinejudge.org/external/100/10041.html
+    \ei
+\end{frame}
+
+% todo: tools: next_permutation, loop through subsets with bitmask
+\begin{frame}{Complete search}
+    \vspace{20pt}
+    \bi
+        \item What if the search space is more complex?
+            \bi
+                \item All permutations of $n$ items
+                \item All subsets of $n$ items
+                \item All ways to put $n$ queens on an $n\times n$ chessboard without any queen attacking any other queen
+            \ei
+        \item How are we supposed to iterate through the search space?
+        \item Let's take a better look at these examples
+    \ei
+\end{frame}
+
+\begin{frame}[fragile]{Iterating through permutations}
+    \bi
+        \item Already implemented in many standard libraries:
+            \bi
+                \item \texttt{next\_{}permutation} in C++
+                \item \texttt{itertools.permutations} in Python
+            \ei
+    \ei
+
+            \begin{minted}{cpp}
+int n = 5;
+vector<int> perm(n);
+for (int i = 0; i < n; i++) perm[i] = i + 1;
+
+do {
+    for (int i = 0; i < n; i++) {
+        printf("%d ", perm[i]);
+    }
+    printf("\n");
+
+} while (next_permutation(perm.begin(), perm.end()));
+            \end{minted}
+
+\end{frame}
+
+\begin{frame}{Iterating through permutations}
+    \vspace{40pt}
+
+    \bi
+        \item Even simpler in Python...
+        \vspace{20pt}
+        \item Remember that there are $n!$ permutations of length $n$, so usually you can only go through all permutations if $n \leq 11$
+            \bi
+                \item Otherwise you need to find a more clever approach than complete search
+            \ei
+            \vspace{20pt}
+    \ei
+\end{frame}
+
+% TODO: Example problem
+
+\begin{frame}[fragile]{Iterating through subsets}
+    \bi
+        \item Remember the bit representation of subsets?
+        \item Each integer from $0$ to $2^n - 1$ represents a different subset of the set $\{1,2,\ldots,n\}$
+        \item Just iterate through the integers
+    \ei
+
+            \begin{minted}{cpp}
+int n = 5;
+for (int subset = 0; subset < (1 << n); subset++) {
+    for (int i = 0; i < n; i++) {
+        if ((subset & (1 << i)) != 0) {
+            printf("%d ", i+1);
+        }
+    }
+    printf("\n");
+}
+            \end{minted}
+\end{frame}
+
+\begin{frame}{Iterating through subsets}
+    \vspace{40pt}
+
+    \bi
+        \item Similar in Python
+        \vspace{20pt}
+        \item Remember that there are $2^n$ permutations of length $n$, so usually you can only go through all permutations if $n \leq 25$
+            \bi
+                \item Otherwise you need to find a more clever approach than complete search
+            \ei
+            \vspace{20pt}
+    \ei
+\end{frame}
+
+% TODO: Example problem
+
+% TODO: Backtracking
+\begin{frame}[fragile]{Backtracking}
+    \vspace{30pt}
+
+    \bi
+        \item We've seen two ways to go through a complex search space, but both of the solutions were rather specific
+        \item Would be nice to have a more general ``framework''
+        \vspace{10pt}
+        \item Backtracking!
+    \ei
+\end{frame}
+
+\begin{frame}[fragile]{Backtracking}
+    \vspace{20pt}
+    \bi
+        \item Define states
+            \bi
+                \item We have one initial ``empty'' state
+                \item Some states are partial
+                \item Some states are complete
+            \ei
+        \vspace{10pt}
+        \item Define transitions from a state to possible next states
+        \vspace{10pt}
+        \item Basic idea:
+            \begin{enumerate}
+                \item Start with the empty state
+                \item Use recursion to traverse all states by going through the transitions
+                \item If the current state is invalid, then stop exploring this branch
+                \item Process all complete states (these are the states we're looking for)
+            \end{enumerate}
+    \ei
+\end{frame}
+
+
+\begin{frame}[fragile]{Backtracking}
+    \vspace{10pt}
+    \bi
+        \item General solution form:
+    \ei
+
+    \begin{minted}[fontsize=\scriptsize]{cpp}
+state S;
+
+void generate() {
+    if (!is_valid(S))
+        return;
+
+    if (is_complete(S))
+        print(S);
+
+    foreach (possible next move P) {
+        apply move P;
+        generate();
+        undo move P;
+    }
+}
+
+S = empty state;
+generate();
+    \end{minted}
+\end{frame}
+
+
+% TODO: Generating all subsets
+\begin{frame}[fragile]{Generating all subsets}
+    \bi
+        \item Also simple to do with backtracking:
+    \ei
+    \begin{minted}[fontsize=\tiny]{cpp}
+const int n = 5;
+bool pick[n];
+
+void generate(int at) {
+    if (at == n) {
+        for (int i = 0; i < n; i++) {
+            if (pick[i]) {
+                printf("%d ", i+1);
+            }
+        }
+        printf("\n");
+    } else {
+
+        // either pick element no. at
+        pick[at] = true;
+        generate(at + 1);
+
+        // or don't pick element no. at
+        pick[at] = false;
+        generate(at + 1);
+    }
+}
+
+generate(0);
+    \end{minted}
+\end{frame}
+
+
+% TODO: Generating all permutations
+\begin{frame}[fragile]{Generating all permutations}
+    \bi
+        \item Also simple to do with backtracking:
+    \ei
+    \begin{minted}[fontsize=\tiny]{cpp}
+const int n = 5;
+int perm[n];
+bool used[n];
+
+void generate(int at) {
+    if (at == n) {
+        for (int i = 0; i < n; i++) {
+            printf("%d ", perm[i]+1);
+        }
+        printf("\n");
+    } else {
+
+        // decide what the at-th element should be
+        for (int i = 0; i < n; i++) {
+            if (!used[i]) {
+                used[i] = true;
+                perm[at] = i;
+
+                generate(at + 1);
+
+                // remember to undo the move:
+                used[i] = false;
+            }
+        }
+    }
+}
+
+memset(used, 0, n);
+generate(0);
+    \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{$n$ queens}
+    \vspace{20pt}
+    \bi
+        \item Given $n$ queens and an $n\times n$ chessboard, find all ways to
+            put the $n$ queens on the chessboard such that no queen can attack
+            any other queen
+
+        \vspace{10pt}
+
+        \item This is a very specific set we want to iterate through, so we probably won't find this in the standard library
+        \item We could use our bit trick to iterate through all subsets of the $n\times n$ cells of size $n$, but that would be very slow
+        \vspace{20pt}
+        \item Let's use backtracking
+    \ei
+\end{frame}
+
+\begin{frame}[fragile]{$n$ queens}
+    \vspace{10pt}
+    \bi
+        \item Go through the cells in increasing order
+        \item Either put a queen on that cell or not (transition)
+        \item Don't put down a queen if she's able to attack another queen already on the table
+    \ei
+
+    \vspace{10pt}
+
+    \begin{minted}{cpp}
+const int n = 8;
+bool has_queen[n][n];
+int queens_left = n;
+
+// generate function
+
+memset(has_queen, 0, sizeof(has_queen));
+generate(0, 0);
+    \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{$n$ queens}
+    \begin{minted}[fontsize=\tiny]{cpp}
+void generate(int x, int y) {
+    if (y == n) {
+        generate(x+1, 0);
+    } else if (x == n) {
+        if (queens_left == 0) {
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    printf("%c", has_queen[i][j] ? 'Q' : '.');
+                }
+                printf("\n");
+            }
+        }
+    } else {
+
+        if (queens_left > 0 and no queen can attack cell (x,y)) {
+            // try putting a queen on this cell
+            has_queen[x][y] = true;
+            queens_left--;
+
+            generate(x, y+1);
+
+            // undo the move
+            has_queen[x][y] = false;
+            queens_left++;
+        }
+
+        // try leaving this cell empty
+        generate(x, y+1);
+    }
+}
+    \end{minted}
+\end{frame}
+
+% TODO: Example problem
+\begin{frame}{Example problem: The Hamming Distance Problem}
+    \bi
+        \item http://uva.onlinejudge.org/external/7/729.html
+    \ei
+\end{frame}
+
+% TODO: Divide and conquer
+\begin{frame}{Divide and conquer}
+    \vspace{10pt}
+    \bi
+        \item Given an instance of the problem, the basic idea is to
+            \begin{enumerate}
+                \item split the problem into one or more smaller subproblems
+                \item solve each of these subproblems recursively
+                \item combine the solutions to the subproblems into a solution of the given problem
+            \end{enumerate}
+
+        \vspace{10pt}
+
+        \item Some standard divide and conquer algorithms:
+            \bi
+                \item Quicksort
+                \item Mergesort
+                \item Karatsuba algorithm
+                \item Strassen algorithm
+                \item Many algorithms from computational geometry
+                    \bi
+                        \item Convex hull
+                        \item Closest pair of points
+                    \ei
+            \ei
+    \ei
+\end{frame}
+
+\begin{frame}[fragile]{Divide and conquer: Time complexity}
+    \begin{minted}[fontsize=\scriptsize]{cpp}
+void solve(int n) {
+    if (n == 0)
+        return;
+
+    solve(n/2);
+    solve(n/2);
+
+    for (int i = 0; i < n; i++) {
+        // some constant time operations
+    }
+}
+    \end{minted}
+
+    \bi
+        \item What is the time complexity of this divide and conquer algorithm?
+        \item Usually helps to model the time complexity as a recurrence relation:
+            \bi
+                \item $T(n) = 2T(n/2) + n$
+            \ei
+    \ei
+\end{frame}
+
+\begin{frame}[fragile]{Divide and conquer: Time complexity}
+    \bi
+        \item But how do we solve such recurrences?
+        \item Usually simplest to use the Master theorem when applicable
+            \bi
+                \item It gives a solution to a recurrence of the form $T(n) = aT(n/b) + f(n)$ in asymptotic terms
+                \item All of the divide and conquer algorithms mentioned so far have a recurrence of this form
+            \ei
+        \vspace{10pt}
+        \item The Master theorem tells us that $T(n) = 2T(n/2) + n$ has asymptotic time complexity $O(n \log n)$
+        \vspace{10pt}
+        \item You don't need to know the Master theorem for this course, but still recommended as it's very useful
+    \ei
+\end{frame}
+
+\begin{frame}{Decrease and conquer}
+    \vspace{30pt}
+    \bi
+        \item Sometimes we're not actually dividing the problem into many subproblems, but only into one smaller subproblem
+        \item Usually called decrease and conquer
+        \item The most common example of this is binary search
+    \ei
+\end{frame}
+
+\begin{frame}{Binary search}
+    \vspace{20pt}
+    \bi
+        \item We have a \textbf{sorted} array of elements, and we want to check if it contains a particular element $x$
+        \vspace{5pt}
+        \item Algorithm:
+            \begin{enumerate}
+                \item Base case: the array is empty, return false
+                \item Compare $x$ to the element in the middle of the array
+                \item If it's equal, then we found $x$ and we return true
+                \item If it's less, then $x$ must be in the left half of the array
+                    \begin{enumerate}
+                        \item Binary search the element (recursively) in the left half
+                    \end{enumerate}
+                \item If it's greater, then $x$ must be in the right half of the array
+                    \begin{enumerate}
+                        \item Binary search the element (recursively) in the right half
+                    \end{enumerate}
+            \end{enumerate}
+    \ei
+\end{frame}
+
+\begin{frame}[fragile]{Binary search}
+    \vspace{15pt}
+    \begin{minted}[fontsize=\scriptsize]{cpp}
+bool binary_search(const vector<int> &arr, int lo, int hi, int x) {
+    if (lo > hi) {
+        return false;
+    }
+
+    int m = (lo + hi) / 2;
+    if (arr[m] == x) {
+        return true;
+    } else if (x < arr[m]) {
+        return binary_search(arr, lo, m - 1, x);
+    } else if (x > arr[m]) {
+        return binary_search(arr, m + 1, hi, x);
+    }
+}
+
+binary_search(arr, 0, arr.size() - 1, x);
+    \end{minted}
+
+    \bi
+        \item $T(n) = T(n/2) + 1$
+        \item $O(\log n)$
+    \ei
+\end{frame}
+
+\begin{frame}[fragile]{Binary search - iterative}
+    \vspace{20pt}
+    \begin{minted}[fontsize=\scriptsize]{cpp}
+bool binary_search(const vector<int> &arr, int x) {
+    int lo = 0,
+        hi = arr.size() - 1;
+
+    while (lo <= hi) {
+        int m = (lo + hi) / 2;
+        if (arr[m] == x) {
+            return true;
+        } else if (x < arr[m]) {
+            hi = m - 1;
+        } else if (x > arr[m]) {
+            lo = m + 1;
+        }
+    }
+
+    return false;
+}
+    \end{minted}
+\end{frame}
+
+% TODO: Binary search over integers
+\begin{frame}{Binary search over integers}
+    \bi
+        \item This might be the most well known application of binary search, but it's far from being the only application
+        \item More generally, we have a predicate $p : \{0,\ldots,n-1\} \rightarrow \{T, F\}$ which has the property that if $p(i) = T$, then $p(j) = T$ for all $j > i$
+        \item Our goal is to find the smallest index $j$ such that $p(j) = T$ as quickly as possible
+    \ei
+
+    \begin{center}
+        \begin{tabular}{ccccccccccccccccccc}
+            $i$ & $0$ & $1$ & $\cdots$ & $j-1$ & \color{vhilight}{$j$} & $j+1$ & $\cdots$ & $n-2$ & $n-1$ \\
+            \hline
+            $p(i)$ & $F$ & $F$ & $\cdots$ & $F$ & \color{vhilight}{$T$} & $T$ & $\cdots$ & $T$ & $T$ \\
+        \end{tabular}
+    \end{center}
+
+    \bi
+        \item We can do this in $O(\log(n) \times f)$ time, where $f$ is the cost of evaluating the predicate $p$, in the same way as when we were binary searching an array
+    \ei
+\end{frame}
+
+\begin{frame}[fragile]{Binary search over integers}
+    \begin{minted}[fontsize=\footnotesize]{cpp}
+int lo = 0,
+    hi = n - 1;
+
+while (lo < hi) {
+    int m = (lo + hi) / 2;
+
+    if (p(m)) {
+        hi = m;
+    } else {
+        lo = m + 1;
+    }
+}
+
+if (lo == hi && p(lo)) {
+    printf("lowest index is %d\n", lo);
+} else {
+    printf("no such index\n");
+}
+    \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{Binary search over integers}
+    \bi
+        \item Find the index of $x$ in the sorted array $arr$
+    \ei
+    \begin{minted}{cpp}
+bool p(int i) {
+    return arr[i] >= x;
+}
+    \end{minted}
+
+    \vspace{20pt}
+    \bi
+        \item Later we'll see how to use this in other ways
+    \ei
+\end{frame}
+
+% TODO: Binary search over reals
+\begin{frame}[fragile]{Binary search over reals}
+    \bi
+        \item An even more general version of binary search is over the real numbers
+        \item We have a predicate $p : [lo,hi] \rightarrow \{T, F\}$ which has the property that if $p(i) = T$, then $p(j) = T$ for all $j > i$
+        \item Our goal is to find the smallest real number $j$ such that $p(j) = T$ as quickly as possible
+
+        \vspace{5pt}
+        \item Since we're working with real numbers (hypothetically), our $[lo,hi]$ can be halved infinitely many times without ever becoming a single real number
+        \item Instead it will suffice to find a real number $j'$ that is very close to the correct answer $j$, say not further than $EPS = 2^{-30}$ away
+
+        \vspace{5pt}
+    \item We can do this in $O(\log(\frac{hi - lo}{EPS}))$ time in a similar way as when we were binary searching an array
+    \ei
+\end{frame}
+
+\begin{frame}[fragile]{Binary search over reals}
+    \begin{minted}{cpp}
+double EPS = 1e-10,
+       lo = -1000.0,
+       hi = 1000.0;
+
+while (hi - lo > EPS) {
+    double mid = (lo + hi) / 2.0;
+
+    if (p(mid)) {
+        hi = mid;
+    } else {
+        lo = mid;
+    }
+}
+
+printf("%0.10lf\n", lo);
+    \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{Binary search over reals}
+    \bi
+        \item This has many cool numerical applications
+        \vspace{5pt}
+        \item Find the square root of $x$
+    \ei
+    \begin{minted}{cpp}
+bool p(double j) {
+    return j*j >= x;
+}
+    \end{minted}
+    \bi
+        \item Find the root of an increasing function $f(x)$
+    \ei
+    \begin{minted}{cpp}
+bool p(double x) {
+    return f(x) >= 0.0;
+}
+    \end{minted}
+
+    \bi
+        \item This is also referred to as the Bisection method
+    \ei
+\end{frame}
+
+% TODO: Example problem
+
+\begin{frame}{Example problem}
+    \bi
+        \item Problem C from NWERC 2006: Pie
+    \ei
+\end{frame}
+
+% TODO: Binary search the answer
+\begin{frame}{Binary search the answer}
+    \vspace{10pt}
+    \bi
+        \item It may be hard to find the optimal solution directly, as we saw in the example problem
+        \item On the other hand, it may be easy to check if some $x$ is a solution or not
+        \vspace{5pt}
+        \item A method of using binary search to find the minimum or maximum solution to a problem
+        \item Only applicable when the problem has the binary search property: if $i$ is a solution, then so are all $j > i$
+        \vspace{5pt}
+        \item $p(i)$ checks whether $i$ is a solution, then we simply apply binary search on $p$ to get the minimum or maximum solution
+    \ei
+\end{frame}
+
+% TODO: Example problem
+% TODO: Other types of divide and conquer
+\begin{frame}{Other types of divide and conquer}
+    \vspace{20pt}
+    \bi
+        \item Binary search is very useful, can be used to construct simple and efficient solutions to problems
+        \item But binary search is only one example of divide and conquer
+        \item Let's explore two more examples
+    \ei
+\end{frame}
+
+% TODO: Binary exponentiation
+\begin{frame}[fragile]{Binary exponentiation}
+    \bi
+        \item We want to calculate $x^n$, where $x,n$ are integers
+        \item Assume we don't have the built in \texttt{pow} method
+        \item Naive method:
+    \ei
+
+    \begin{minted}{cpp}
+int pow(int x, int n) {
+    int res = 1;
+    for (int i = 0; i < n; i++) {
+        res = res * x;
+    }
+
+    return res;
+}
+    \end{minted}
+
+    \bi
+        \item This is $O(n)$, but what if we want to support large $n$ efficiently?
+    \ei
+\end{frame}
+
+\begin{frame}{Binary exponentiation}
+    \bi
+        \item Let's use divide and conquer
+        \vspace{10pt}
+        \item Notice the three identities:
+
+            \bi
+                \item $x^0 = 1$
+                \item $x^n = x \times x^{n-1}$
+                \item $x^n = x^{n/2} \times x^{n/2}$
+            \ei
+
+        \item Or in terms of our function:
+
+            \bi
+                \item $pow(x,0) = 1$
+                \item $pow(x,n) = x \times pow(x, n-1)$
+                \item $pow(x,n) = pow(x, n/2) \times pow(x, n/2)$
+            \ei
+
+        \item $pow(x,n/2)$ is used twice, but we only need to compute it once:
+
+            \bi
+                \item $pow(x,n) = pow(x, n/2)^2$
+            \ei
+    \ei
+\end{frame}
+
+\begin{frame}[fragile]{Binary exponentiation}
+    \vspace{20pt}
+
+    \bi
+        \item Let's try using these identities to compute the answer recursively
+    \ei
+
+    \vspace{10pt}
+
+    \begin{minted}{cpp}
+int pow(int x, int n) {
+    if (n == 0) return 1;
+    return x * pow(x, n - 1);
+}
+    \end{minted}
+
+    \vspace{10pt}
+
+    \bi
+        \item<2-> How efficient is this?
+            \bi
+                \item $T(n) = 1 + T(n-1)$
+                \item<3-> $O(n)$
+                \item<4-> Still just as slow...
+            \ei
+    \ei
+
+\end{frame}
+
+\begin{frame}[fragile]{Binary exponentiation}
+    \bi
+        \item What about the third identity?
+            \bi
+                \item $n/2$ is not an integer when $n$ is odd, so let's only use it when $n$ is even
+            \ei
+    \ei
+
+    \begin{minted}{cpp}
+int pow(int x, int n) {
+    if (n == 0) return 1;
+    if (n % 2 != 0) return x * pow(x, n - 1);
+    int st = pow(x, n/2);
+    return st * st;
+}
+    \end{minted}
+
+    \bi
+        \item How efficient is this?
+            \bi
+                \item<2-> $T(n) = 1 + T(n-1)$ if $n$ is odd
+                \item<2-> $T(n) = 1 + T(n/2)$ if $n$ is even
+                \item<3-> Since $n-1$ is even when $n$ is odd:
+                \item<3-> $T(n) = 1 + 1 + T((n-1)/2)$ if $n$ is odd
+                \item<4-> $O(\log n)$
+                \item<4-> Fast!
+            \ei
+    \ei
+\end{frame}
+
+\begin{frame}{Binary exponentiation}
+    \vspace{20pt}
+    \bi
+        \item Notice that $x$ doesn't have to be an integer, and $\star$ doesn't have to be integer multiplication...
+        \item It also works for:
+            \bi
+                \item Computing $x^n$, where $x$ is a floating point number and $\star$ is floating point number multiplication
+                \item Computing $A^n$, where $A$ is a matrix and $\star$ is matrix multiplication
+                \item Computing $x^n \pmod{m}$, where $x$ is a matrix and $\star$ is integer multiplication modulo $m$
+                \item Computing $x\star x\star \cdots \star x$, where $x$ is any element and $\star$ is any associative operator
+            \ei
+
+        \item All of these can be done in $O(\log(n) \times f)$, where $f$ is the cost of doing one application of the $\star$ operator
+    \ei
+\end{frame}
+
+\begin{frame}{Fibonacci words}
+    \bi
+        \item Recall that the Fibonacci sequence can be defined as follows:
+            \bi
+        \item $\mathrm{fib}_1 = 1$
+        \item $\mathrm{fib}_2 = 1$
+        \item $\mathrm{fib}_n = \mathrm{fib}_{n-2} + \mathrm{fib}_{n-1}$
+            \ei
+        \item We get the sequence $1, 1, 2, 3, 5, 8, 13, 21, \ldots$
+        \vspace{10pt}
+        \item There are many generalizations of the Fibonacci sequence
+        \item One of them is to start with other numbers, like:
+            \bi
+                \item $f_1 = 5$
+                \item $f_2 = 4$
+                \item $f_n = f_{n-2} + f_{n-1}$
+            \ei
+        \item We get the sequence $5, 4, 9, 13, 22, 35, 57, \ldots$
+        \vspace{10pt}
+        \item What if we start with something other than numbers?
+    \ei
+\end{frame}
+
+\begin{frame}{Fibonacci words}
+    \vspace{10pt}
+    \bi
+        \item Let's try starting with a pair of strings, and let $+$ denote string concatenation:
+            \bi
+                \item $g_1 = A$
+                \item $g_2 = B$
+                \item $g_n = g_{n-2} + g_{n-1}$
+            \ei
+        \vspace{10pt}
+        \item Now we get the sequence of strings:
+            \bi
+                \item $A$
+                \item $B$
+                \item $AB$
+                \item $BAB$
+                \item $ABBAB$
+                \item $BABABBAB$
+                \item $ABBABBABABBAB$
+                \item $BABABBABABBABBABABBAB$
+                \item $\ldots$
+            \ei
+    \ei
+\end{frame}
+
+\begin{frame}{Fibonacci words}
+    \vspace{5pt}
+    \bi
+        \item How long is $g_n$?
+            \bi
+                \item $\mathrm{len}(g_1) = 1$
+                \item $\mathrm{len}(g_2) = 1$
+                \item $\mathrm{len}(g_n) = \mathrm{len}(g_{n-2}) + \mathrm{len}(g_{n-1})$
+            \ei
+        \vspace{5pt}
+        \item Looks familiar?
+        \vspace{2pt}
+        \item $\mathrm{len}(g_n) = \mathrm{fib}_{n}$
+        \vspace{10pt}
+        \item So the strings become very large very quickly
+            \bi
+                \item $\mathrm{len}(g_{10}) = 55$
+                \item $\mathrm{len}(g_{100}) = 354224848179261915075$
+                \item $\mathrm{len}(g_{1000}) = $ \begin{align*}
+                        &434665576869374564356885276750406258025646605173717\\
+                        &804024817290895365554179490518904038798400792551692\\
+                        &959225930803226347752096896232398733224711616429964\\
+                        &409065331879382989696499285160037044761377951668492\\
+                        &28875
+                    \end{align*}
+
+            \ei
+    \ei
+\end{frame}
+
+\begin{frame}{Fibonacci words}
+    \vspace{40pt}
+    \bi
+        \item Task: Compute the $i$th character in $g_{n}$
+        \vspace{10pt}
+        \item<2-> Simple to do in $O(\mathrm{len}(n))$, but that is extremely slow for large $n$
+        \vspace{10pt}
+        \item<3-> Can be done in $O(n)$ using divide and conquer
+    \ei
+\end{frame}
+
+\end{document}
+

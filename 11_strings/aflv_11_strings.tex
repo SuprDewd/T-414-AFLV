@@ -1,0 +1,1362 @@
+\documentclass[12pt,t]{beamer}
+\usepackage{graphicx}
+\setbeameroption{hide notes}
+\setbeamertemplate{note page}[plain]
+
+% get rid of junk
+\usetheme{default}
+\beamertemplatenavigationsymbolsempty
+\hypersetup{pdfpagemode=UseNone} % don't show bookmarks on initial view
+
+% font
+\usepackage{fontspec}
+\setsansfont{TeX Gyre Heros}
+\setbeamerfont{note page}{family*=pplx,size=\footnotesize} % Palatino for notes
+% "TeX Gyre Heros can be used as a replacement for Helvetica"
+% In Unix, unzip the following into ~/.fonts
+% In Mac, unzip it, double-click the .otf files, and install using "FontBook"
+%   http://www.gust.org.pl/projects/e-foundry/tex-gyre/heros/qhv2.004otf.zip
+
+% named colors
+\definecolor{offwhite}{RGB}{249,242,215}
+\definecolor{foreground}{RGB}{255,255,255}
+\definecolor{background}{RGB}{24,24,24}
+\definecolor{title}{RGB}{107,174,214}
+\definecolor{gray}{RGB}{155,155,155}
+\definecolor{subtitle}{RGB}{102,255,204}
+\definecolor{hilight}{RGB}{102,255,204}
+\definecolor{vhilight}{RGB}{255,111,207}
+\definecolor{lolight}{RGB}{155,155,155}
+%\definecolor{green}{RGB}{125,250,125}
+
+% use those colors
+\setbeamercolor{titlelike}{fg=title}
+\setbeamercolor{subtitle}{fg=subtitle}
+\setbeamercolor{institute}{fg=gray}
+\setbeamercolor{normal text}{fg=foreground,bg=background}
+\setbeamercolor{item}{fg=foreground} % color of bullets
+\setbeamercolor{subitem}{fg=gray}
+\setbeamercolor{itemize/enumerate subbody}{fg=gray}
+\setbeamertemplate{itemize subitem}{{\textendash}}
+\setbeamerfont{itemize/enumerate subbody}{size=\footnotesize}
+\setbeamerfont{itemize/enumerate subitem}{size=\footnotesize}
+
+% page number
+\setbeamertemplate{footline}{%
+    \raisebox{5pt}{\makebox[\paperwidth]{\hfill\makebox[20pt]{\color{gray}
+          \scriptsize\insertframenumber}}}\hspace*{5pt}}
+
+% add a bit of space at the top of the notes page
+\addtobeamertemplate{note page}{\setlength{\parskip}{12pt}}
+
+% a few macros
+\newcommand{\bi}{\begin{itemize}}
+\newcommand{\ei}{\end{itemize}}
+\newcommand{\ig}{\includegraphics}
+\newcommand{\subt}[1]{{\footnotesize \color{subtitle} {#1}}}
+
+
+% title info
+\title{Strings}
+% \subtitle{Part 2}
+\author{Bjarki Ágúst Guðmundsson \\ Tómas Ken Magnússon}
+\institute{\href{http://ru.is/td}{School of Computer Science} \\[2pt] \href{http://ru.is}{Reykjavík University}}
+\date{Árangursrík forritun og lausn verkefna}
+% \date{\href{http://www.biostat.wisc.edu/~kbroman}{\tt \scriptsize biostat.wisc.edu/{\textasciitilde}kbroman}
+% \\[-4pt]
+% \href{http://github.com/kbroman}{\tt \scriptsize github.com/kbroman}
+% }
+
+
+% Tikz
+\usepackage{tikz}
+\usetikzlibrary{arrows,shapes}
+\usepackage{forest}
+
+% Minted
+\usepackage{minted}
+\usemintedstyle{monokai}
+\newminted{cpp}{fontsize=\footnotesize}
+
+% Graph styles
+\tikzstyle{vertex}=[circle,fill=black!50,minimum size=15pt,inner sep=0pt, font=\small]
+\tikzstyle{selected vertex} = [vertex, fill=vhilight]
+\tikzstyle{selected2 vertex} = [vertex, fill=hilight!50, text=black]
+\tikzstyle{vertex1} = [vertex, fill=red]
+\tikzstyle{vertex2} = [vertex, fill=blue]
+\tikzstyle{vertex3} = [vertex, fill=green, text=black]
+\tikzstyle{vertex4} = [vertex, fill=yellow, text=black]
+\tikzstyle{vertex5} = [vertex, fill=pink, text=black]
+\tikzstyle{vertex6} = [vertex, fill=purple]
+\tikzstyle{edge} = [draw,thick,-]
+\tikzstyle{dedge} = [draw,thick,->]
+\tikzstyle{weight} = [font=\scriptsize,pos=0.5]
+\tikzstyle{selected edge} = [draw,line width=2pt,-,red!50]
+\tikzstyle{ignored edge} = [draw,line width=5pt,-,black!20]
+
+
+\begin{document}
+
+% title slide
+{
+    \setbeamertemplate{footline}{} % no page number here
+    \frame{
+        \titlepage
+    }
+}
+
+
+\begin{frame}{Today we're going to cover}
+    \vspace{40pt}
+    \bi
+        \item String matching
+            \bi
+                \item Naive algorithm
+                \item Knuth--Morris--Pratt (KMP) algorithm
+            \ei
+        \item Tries
+        \item Suffix tries
+        \item Suffix trees
+        \item Suffix arrays
+    \ei
+\end{frame}
+
+\begin{frame}{String problems}
+    \vspace{10pt}
+    \bi
+        \item Strings frequently appear in our kind of problems
+            \bi
+                \item Reading input
+                \item Writing output
+                \item Parsing
+                \item Identifiers/names
+                \item Data
+            \ei
+        \vspace{5pt}
+        \item But sometimes strings play the key role
+            \bi
+                \item We want to find properties of some given strings
+                \item Is the string a palindrome?
+            \ei
+        \vspace{5pt}
+        \item Here we're going to talk about things related to the latter type of problems
+        \vspace{5pt}
+        \item These problems can be hard, because the length of the strings are often huge
+    \ei
+\end{frame}
+
+% TODO: String matching (definition)
+
+\begin{frame}{String matching}
+    \vspace{30pt}
+
+	\begin{itemize}
+		\item Given a string $S$ of length $n$,
+		\item and a string $T$ of length $m$,
+		\item find all occurrences of $T$ in $S$
+    \end{itemize}
+    \begin{itemize}
+		\item Note:
+        \begin{itemize}
+            \item Occurrences may overlap
+            \item Assume strings contain characters from a constant-sized alphabet
+            % \item Assume $m < n$, otherwise trivial
+        \end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{String matching}
+    \vspace{30pt}
+	Example:
+	\begin{itemize}
+		\item $S = \mathrm{cabcababacaba}$
+		\item $T = \mathrm{aba}$
+	\end{itemize}
+    \begin{itemize}
+        \item<2-> Three occurrences:
+            \begin{itemize}
+                \item<3-> $\mathrm{cabc{\color{red}{aba}}bacaba}$
+                \item<4-> $\mathrm{cabcab{\color{red}{aba}}caba}$
+                \item<5-> $\mathrm{cabcababac{\color{red}{aba}}}$
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+
+% TODO: Naive string matching algorithm
+
+\begin{frame}{Naive string matching algorithm}
+    \vspace{30pt}
+	\begin{itemize}
+	\item For each substring of length $m$ in $S$,
+	\item check if that substring is equal to $T$.
+	\end{itemize}
+		
+\end{frame}
+
+
+\begin{frame}{Naive string matching algorithm}
+    \vspace{30pt}
+    \begin{itemize}
+        \item $S$: \texttt{\textcolor{red}{b}acbababaabcbab}
+        \item $T$: \phantom{\texttt{}}\texttt{\textcolor{red}{a}babaca}
+    \end{itemize}
+\end{frame}
+\begin{frame}{Naive string matching algorithm}
+    \vspace{30pt}
+    \begin{itemize}
+        \item $S$: \texttt{b\textcolor{green}{a}\textcolor{red}{c}bababaabcbab}
+        \item $T$: \phantom{\texttt{a}}\texttt{\textcolor{green}{a}\textcolor{red}{b}abaca}
+    \end{itemize}
+\end{frame}
+\begin{frame}{Naive string matching algorithm}
+    \vspace{30pt}
+    \begin{itemize}
+        \item $S$: \texttt{ba\textcolor{red}{c}bababaabcbab}
+        \item $T$: \phantom{\texttt{aa}}\texttt{\textcolor{red}{a}babaca}
+    \end{itemize}
+\end{frame}
+\begin{frame}{Naive string matching algorithm}
+    \vspace{30pt}
+    \begin{itemize}
+        \item $S$: \texttt{bac\textcolor{red}{b}ababaabcbab}
+        \item $T$: \phantom{\texttt{aaa}}\texttt{\textcolor{red}{a}babaca}
+    \end{itemize}
+\end{frame}
+\begin{frame}{Naive string matching algorithm}
+    \vspace{30pt}
+    \begin{itemize}
+        \item $S$: \texttt{bacb\textcolor{green}{ababa}\textcolor{red}{a}bcbab}
+        \item $T$: \phantom{\texttt{aaaa}}\texttt{\textcolor{green}{ababa}\textcolor{red}{c}a}
+    \end{itemize}
+\end{frame}
+\begin{frame}{Naive string matching algorithm}
+    \vspace{30pt}
+    \begin{itemize}
+        \item $S$: \texttt{bacba\textcolor{red}{b}abaabcbab}
+        \item $T$: \phantom{\texttt{aaaaa}}\texttt{\textcolor{red}{a}babaca}
+    \end{itemize}
+\end{frame}
+\begin{frame}{Naive string matching algorithm}
+    \vspace{30pt}
+    \begin{itemize}
+        \item $S$: \texttt{bacbab\textcolor{green}{aba}\textcolor{red}{a}bcbab}
+        \item $T$: \phantom{\texttt{aaaaaa}}\texttt{\textcolor{green}{aba}\textcolor{red}{b}aca}
+    \end{itemize}
+\end{frame}
+\begin{frame}{Naive string matching algorithm}
+    \vspace{30pt}
+    \begin{itemize}
+        \item $S$: \texttt{bacbaba\textcolor{red}{b}aabcbab}
+        \item $T$: \phantom{\texttt{aaaaaaa}}\texttt{\textcolor{red}{a}babaca}
+    \end{itemize}
+\end{frame}
+\begin{frame}{Naive string matching algorithm}
+    \vspace{30pt}
+    \begin{itemize}
+        \item $S$: \texttt{bacbabab\textcolor{green}{a}\textcolor{red}{a}bcbab}
+        \item $T$: \phantom{\texttt{aaaaaaaa}}\texttt{\textcolor{green}{a}\textcolor{red}{b}abaca}
+    \end{itemize}
+    % \item<2-> $T$ is always shifted one forward
+\end{frame}
+
+\begin{frame}[fragile]{Naive string matching algorithm}
+    \begin{minted}[fontsize=\footnotesize]{cpp}
+int string_match(const string &s, const string &t) {
+    int n = s.size(),
+        m = t.size();
+
+    for (int i = 0; i + m - 1 < n; i++) {
+        bool found = true;
+        for (int j = 0; j < m; j++) {
+            if (s[i + j] != t[j]) {
+                found = false;
+                break;
+            }
+        }
+        if (found) {
+            return i;
+        }
+    }
+
+    return -1;
+}
+    \end{minted}
+\end{frame}
+
+\begin{frame}{Naive string matching algorithm}
+    \vspace{30pt}
+    \bi
+        \item Double for-loop
+            \begin{itemize}
+                \item outer loop is $O(n)$ iterations
+                \item inner loop is $O(m)$ iterations worst case
+            \end{itemize}
+        \item Time complexity is $O(nm)$ worst case
+        \item<2-> Can we do better?
+    \ei
+\end{frame}
+
+% TODO: KMP algorithm
+\begin{frame}
+    \frametitle{Knuth--Morris--Pratt algorithm}
+    \vspace{30pt}
+    \begin{itemize}
+    \item The KMP algorithm avoids useless comparisons:
+        \begin{itemize}
+            \item $S$: \texttt{\textcolor{red}{b}acbababaabcbab}
+            \item $T$: \phantom{\texttt{}}\texttt{\textcolor{red}{a}babaca}
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+\begin{frame}
+    \frametitle{Knuth--Morris--Pratt algorithm}
+    \vspace{30pt}
+    \begin{itemize}
+    \item The KMP algorithm avoids useless comparisons:
+        \begin{itemize}
+            \item $S$: \texttt{b\textcolor{green}{a}\textcolor{red}{c}bababaabcbab}
+            \item $T$: \phantom{\texttt{a}}\texttt{\textcolor{green}{a}\textcolor{red}{b}abaca}
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+\begin{frame}
+    \frametitle{Knuth--Morris--Pratt algorithm}
+    \vspace{30pt}
+    \begin{itemize}
+    \item The KMP algorithm avoids useless comparisons:
+        \begin{itemize}
+            \item $S$: \texttt{ba\textcolor{red}{c}bababaabcbab}
+            \item $T$: \phantom{\texttt{aa}}\texttt{\textcolor{red}{a}babaca}
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+\begin{frame}
+    \frametitle{Knuth--Morris--Pratt algorithm}
+    \vspace{30pt}
+    \begin{itemize}
+    \item The KMP algorithm avoids useless comparisons:
+        \begin{itemize}
+            \item $S$: \texttt{bac\textcolor{red}{b}ababaabcbab}
+            \item $T$: \phantom{\texttt{aaa}}\texttt{\textcolor{red}{a}babaca}
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+\begin{frame}
+    \frametitle{Knuth--Morris--Pratt algorithm}
+    \vspace{30pt}
+    \begin{itemize}
+    \item The KMP algorithm avoids useless comparisons:
+        \begin{itemize}
+            \item $S$: \texttt{bacb\textcolor{green}{ababa}\textcolor{red}{a}bcbab}
+            \item $T$: \phantom{\texttt{aaaa}}\texttt{\textcolor{green}{ababa}\textcolor{red}{c}a}
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+\begin{frame}
+    \frametitle{Knuth--Morris--Pratt algorithm}
+    \vspace{30pt}
+    \begin{itemize}
+    \item The KMP algorithm avoids useless comparisons:
+        \begin{itemize}
+            \item $S$: \texttt{bacbab\textcolor{green}{aba}\textcolor{red}{a}bcbab}
+            \item $T$: \phantom{\texttt{aaaaaa}}\texttt{\textcolor{green}{aba}\textcolor{red}{b}aca}
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+\begin{frame}
+    \frametitle{Knuth--Morris--Pratt algorithm}
+    \vspace{30pt}
+    \begin{itemize}
+    \item The KMP algorithm avoids useless comparisons:
+        \begin{itemize}
+            \item $S$: \texttt{bacbabab\textcolor{green}{a}\textcolor{red}{a}bcbab}
+            \item $T$: \phantom{\texttt{aaaaaaaa}}\texttt{\textcolor{green}{a}\textcolor{red}{b}abaca}
+        \end{itemize}
+    \item<2-> The number of shifts depend on which characters are currently matched
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Knuth--Morris--Pratt algorithm}
+    \vspace{10pt}
+    \begin{itemize}
+        \item How are the number of shifts determined?
+            \vspace{5pt}
+        \item Let {\footnotesize $\pi[q] = \max \{ k : k < q \textrm{ and } T[1\ldots k] \textrm{ is a suffix of } T[1\ldots q] \}$}
+            \vspace{5pt}
+        \item<2-> Example:\\
+            \begin{center}
+                % \hspace{-50px}
+                \begin{tabular}{cccccccc}
+                    $i$ & $1$ & $2$ & $3$ & $4$ & $5$ & $6$ & $7$ \\
+                    \hline
+                    $T[i]$&\texttt{a}&\texttt{b}&\texttt{a}&\texttt{b}&\texttt{a}&\texttt{c}&\texttt{a} \\
+                    $\pi[i]$ & $0$ & $0$ & $1$ & $2$ & $3$ & $0$ & $1$\\
+                \end{tabular}
+            \end{center}
+    \vspace{5pt}
+        \item<3-> If, at position $i$, $q$ characters match (i.e. $T[1\ldots q] = S[i\ldots i+q-1]$), then
+            \begin{itemize}
+                \item if $q = 0$, shift pattern $1$ position right
+                \item otherwise, shift pattern $q - \pi[q]$ positions right
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Knuth--Morris--Pratt algorithm}
+    \vspace{30pt}
+    \begin{itemize}
+        \item Example:
+        \begin{itemize}
+            \item $S$: \texttt{bacb\textcolor{green}{ababa}\textcolor{red}{a}bcbab}
+            \item $T$: \phantom{\texttt{aaaa}}\texttt{\textcolor{green}{ababa}\textcolor{red}{c}a}
+            \item<2-> $5$ characters match, so $q = 5$
+            \item<3-> $\pi[q] = \pi[5] = 3$
+            \item<4-> Then shift $q - \pi[q] = 5 - 3 = 2$ positions
+            \item<5-> $S$: \texttt{bacbab\textcolor{green}{aba}\textcolor{red}{a}bcbab}
+            \item<5-> $T$: \phantom{\texttt{aaaaaa}}\texttt{\textcolor{green}{aba}\textcolor{red}{b}aca}
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Knuth--Morris--Pratt algorithm}
+    \vspace{40pt}
+    \begin{itemize}
+        \item Given $\pi$, matching only takes $O(n)$ time
+        \item $\pi$ can be computed in $O(m)$ time
+        \item Total time complexity of KMP therefore $O(n+m)$ worst case
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Knuth--Morris--Pratt algorithm}
+    \begin{minted}[fontsize=\scriptsize]{cpp}
+int* compute_pi(const string &t) {
+
+    int m = t.size();
+    int *pi = new int[m + 1];
+    if (0 <= m) pi[0] = 0;
+    if (1 <= m) pi[1] = 0;
+    for (int i = 2; i <= m; i++) {
+        for (int j = pi[i - 1]; ; j = pi[j]) {
+            if (t[j] == t[i - 1]) {
+                pi[i] = j + 1;
+                break;
+            }
+            if (j == 0) {
+                pi[i] = 0;
+                break;
+            }
+        }
+    }
+
+    return pi;
+}
+    \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{Knuth--Morris--Pratt algorithm}
+    \begin{minted}[fontsize=\scriptsize]{cpp}
+int string_match(const string &s, const string &t) {
+
+    int n = s.size(),
+        m = t.size();
+
+    int *pi = compute_pi(t);
+
+    for (int i = 0, j = 0; i < n; ) {
+        if (s[i] == t[j]) {
+            i++; j++;
+            if (j == m) {
+                return i - m;
+            }
+        }
+        else if (j > 0) j = pi[j];
+        else i++;
+    }
+
+    delete[] pi;
+    return -1;
+}
+    \end{minted}
+\end{frame}
+
+\begin{frame}{Sets of strings}
+    \vspace{30pt}
+    \bi
+\item We often have sets (or maps) of strings
+\item Insertions and lookups usually guarantee $O(\log n)$ comparisons
+    \vspace{10pt}
+\item But string comparisions are actually pretty expensive...
+    \vspace{10pt}
+\item There are other data structures, like tries, which do this in a more clever way
+    \ei
+\end{frame}
+
+% TODO: Trie
+\begin{frame}[fragile]{Tries}
+
+\begin{forest}
+for tree={
+    circle,
+    fill=black!50,
+    minimum size=8pt,inner sep=0pt, font=\tiny
+  % circle,
+  % black,
+  % draw,
+  % fill=blue!40,
+}
+  [{}
+    [{}, edge label={node [midway, above left] {B}}
+      [{}, edge label={node [midway, right] {A}}
+        [{}, edge label={node [midway, right] {U}}
+          [,phantom]
+          [{}, edge label={node [midway, left] {E}}
+            [{}, edge label={node [midway, left] {R}}, fill=black!10
+            ]
+            [,phantom]
+          ]
+          [{}, edge label={node [midway, right] {M}}, fill=black!10
+          ]
+          [,phantom]
+        ]
+        [,phantom]
+      ]
+      [,phantom]
+    ]
+    [{}, edge label={node [midway, right] {F}}
+      [{}, edge label={node [midway, right] {E}}
+        [{}, edge label={node [midway, right] {L}}
+          [{}, edge label={node [midway, right] {D}}, fill=black!10
+          ]
+          [,phantom]
+        ]
+        [,phantom]
+      ]
+      [,phantom]
+    ]
+    [{}, edge label={node [midway, left] {H}}
+      [{}, edge label={node [midway, left] {A}}
+        [{}, edge label={node [midway, left] {H}}
+          [{}, edge label={node [midway, left] {N}}, fill=black!10
+          ]
+          [,phantom]
+        ]
+        [,phantom]
+        % [{}, edge label={node [midway, right] {U}}
+        %   [{}, edge label={node [midway, left] {S}}, fill=black!10
+        %   ]
+        %   [,phantom]
+        % ]
+        [,phantom]
+      ]
+      [{}, edge label={node [midway, left] {O}}
+        [{}, edge label={node [midway, right] {F}}, fill=black!10
+        ]
+      ]
+      [{}, edge label={node [midway, right] {U}}
+        [,phantom]
+        [{}, edge label={node [midway, left] {H}}
+          [{}, edge label={node [midway, right] {N}}, fill=black!10
+          ]
+        ]
+        [{}, edge label={node [midway, right] {N}}
+          [,phantom]
+          [{}, edge label={node [midway, right] {D}}, fill=black!10
+          ]
+        ]
+      ]
+    ]
+    [{}, edge label={node [midway, above right] {K}}
+      [,phantom]
+      [{}, edge label={node [midway, right] {A}}
+        [,phantom]
+        [{}, edge label={node [midway, right] {T}}
+          [,phantom]
+          [{}, edge label={node [midway, right] {Z}}
+            [,phantom]
+            [{}, edge label={node [midway, right] {E}}, fill=black!10
+            ]
+          ]
+        ]
+      ]
+    ]
+  ]
+\end{forest}
+\end{frame}
+
+
+\begin{frame}[fragile]{Tries}
+
+\begin{forest}
+for tree={
+    circle,
+    fill=black!50,
+    minimum size=8pt,inner sep=0pt, font=\tiny
+  % circle,
+  % black,
+  % draw,
+  % fill=blue!40,
+}
+  [{}
+    [{}, edge label={node [midway, above left] {B}}
+      [{}, edge label={node [midway, right] {A}}
+        [{}, edge label={node [midway, right] {U}}
+          [,phantom]
+          [{}, edge label={node [midway, left] {E}}
+            [{}, edge label={node [midway, left] {R}}, fill=black!10
+            ]
+            [,phantom]
+          ]
+          [{}, edge label={node [midway, right] {M}}, fill=black!10
+          ]
+          [,phantom]
+        ]
+        [,phantom]
+      ]
+      [,phantom]
+    ]
+    [{}, edge label={node [midway, right] {F}}
+      [{}, edge label={node [midway, right] {E}}
+        [{}, edge label={node [midway, right] {L}}
+          [{}, edge label={node [midway, right] {D}}, fill=black!10
+          ]
+          [,phantom]
+        ]
+        [,phantom]
+      ]
+      [,phantom]
+    ]
+    [{}, edge label={node [midway, left] {H}}
+      [{}, edge label={node [midway, left] {A}}
+        [{}, edge label={node [midway, left] {H}}
+          [{}, edge label={node [midway, left] {N}}, fill=black!10
+          ]
+          [,phantom]
+        ]
+        % [,phantom]
+        [{}, edge label={node [midway, right] {U}}
+          [{}, edge label={node [midway, left] {S}}, fill=black!10
+          ]
+          [,phantom]
+        ]
+        [,phantom]
+      ]
+      [{}, edge label={node [midway, left] {O}}
+        [{}, edge label={node [midway, right] {F}}, fill=black!10
+        ]
+      ]
+      [{}, edge label={node [midway, right] {U}}
+        [,phantom]
+        [{}, edge label={node [midway, left] {H}}
+          [{}, edge label={node [midway, right] {N}}, fill=black!10
+          ]
+        ]
+        [{}, edge label={node [midway, right] {N}}
+          [,phantom]
+          [{}, edge label={node [midway, right] {D}}, fill=black!10
+          ]
+        ]
+      ]
+    ]
+    [{}, edge label={node [midway, above right] {K}}
+      [,phantom]
+      [{}, edge label={node [midway, right] {A}}
+        [,phantom]
+        [{}, edge label={node [midway, right] {T}}
+          [,phantom]
+          [{}, edge label={node [midway, right] {Z}}
+            [,phantom]
+            [{}, edge label={node [midway, right] {E}}, fill=black!10
+            ]
+          ]
+        ]
+      ]
+    ]
+  ]
+\end{forest}
+\end{frame}
+
+
+\begin{frame}[fragile]{Tries}
+
+\begin{forest}
+for tree={
+    circle,
+    fill=black!50,
+    minimum size=8pt,inner sep=0pt, font=\tiny
+  % circle,
+  % black,
+  % draw,
+  % fill=blue!40,
+}
+  [{}
+    [{}, edge label={node [midway, above left] {B}}
+      [{}, edge label={node [midway, right] {A}}
+        [{}, edge label={node [midway, right] {U}}
+          [,phantom]
+          [{}, edge label={node [midway, left] {E}}
+            [{}, edge label={node [midway, left] {R}}, fill=black!10
+            ]
+            [,phantom]
+          ]
+          [{}, edge label={node [midway, right] {M}}, fill=black!10
+          ]
+          [,phantom]
+        ]
+        [,phantom]
+      ]
+      [,phantom]
+    ]
+    [{}, edge label={node [midway, right] {F}}
+      [{}, edge label={node [midway, right] {E}}
+        [{}, edge label={node [midway, right] {L}}
+          [{}, edge label={node [midway, right] {D}}, fill=black!10
+          ]
+          [,phantom]
+        ]
+        [,phantom]
+      ]
+      [,phantom]
+    ]
+    [{}, edge label={node [midway, left] {H}}
+      [{}, edge label={node [midway, left] {A}}, fill=black!10
+        [{}, edge label={node [midway, left] {H}}
+          [{}, edge label={node [midway, left] {N}}, fill=black!10
+          ]
+          [,phantom]
+        ]
+        % [,phantom]
+        [{}, edge label={node [midway, right] {U}}
+          [{}, edge label={node [midway, left] {S}}, fill=black!10
+          ]
+          [,phantom]
+        ]
+        [,phantom]
+      ]
+      [{}, edge label={node [midway, left] {O}}
+        [{}, edge label={node [midway, right] {F}}, fill=black!10
+        ]
+      ]
+      [{}, edge label={node [midway, right] {U}}
+        [,phantom]
+        [{}, edge label={node [midway, left] {H}}
+          [{}, edge label={node [midway, right] {N}}, fill=black!10
+          ]
+        ]
+        [{}, edge label={node [midway, right] {N}}
+          [,phantom]
+          [{}, edge label={node [midway, right] {D}}, fill=black!10
+          ]
+        ]
+      ]
+    ]
+    [{}, edge label={node [midway, above right] {K}}
+      [,phantom]
+      [{}, edge label={node [midway, right] {A}}
+        [,phantom]
+        [{}, edge label={node [midway, right] {T}}
+          [,phantom]
+          [{}, edge label={node [midway, right] {Z}}
+            [,phantom]
+            [{}, edge label={node [midway, right] {E}}, fill=black!10
+            ]
+          ]
+        ]
+      ]
+    ]
+  ]
+\end{forest}
+\end{frame}
+
+\begin{frame}[fragile]{Tries}
+    \begin{minted}{cpp}
+struct node {
+    node* children[26];
+    bool is_end;
+
+    node() {
+        memset(children, 0, sizeof(children));
+        is_end = false;
+    }
+};
+    \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{Tries}
+    \begin{minted}{cpp}
+void insert(node* nd, char *s) {
+    if (*s) {
+        if (!nd->children[*s - 'a'])
+            nd->children[*s - 'a'] = new node();
+
+        insert(nd->children[*s - 'a'], s + 1);
+    } else {
+        nd->is_end = true;
+    }
+}
+    \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{Tries}
+    \begin{minted}{cpp}
+bool contains(node* nd, char *s) {
+    if (*s) {
+        if (!nd->children[*s - 'a'])
+            return false;
+
+        return contains(nd->children[*s - 'a'], s + 1);
+    } else {
+        return nd->is_end;
+    }
+}
+    \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{Tries}
+    \begin{minted}{cpp}
+node *trie = new node();
+
+insert(trie, "banani");
+
+if (contains(trie, "banani")) {
+    // ...
+}
+    \end{minted}
+\end{frame}
+
+\begin{frame}{Tries}
+    \vspace{30pt}
+    \bi
+        \item Time complexity?
+        \vspace{10pt}
+        \item Let $k$ be the length of the string we're inserting/looking for
+        \item Lookup and insertion are both $O(k)$
+        \vspace{10pt}
+        \item Also very space efficient...
+    \ei
+\end{frame}
+
+% TODO: Suffix trie
+\begin{frame}{Suffix tries}
+    \vspace{20pt}
+    \bi
+        \item Say we're dealing with some string $S$ of length $n$
+        \vspace{10pt}
+        \item Let's insert all suffixes of $S$ into a trie
+        \vspace{10pt}
+    \item $S$ = \texttt{banani}
+        \bi
+    \item \texttt{insert(trie, "banani");}
+    \item \texttt{insert(trie, "anani");}
+    \item \texttt{insert(trie, "nani");}
+    \item \texttt{insert(trie, "ani");}
+    \item \texttt{insert(trie, "ni");}
+    \item \texttt{insert(trie, "i");}
+        \ei
+    \ei
+\end{frame}
+
+
+\begin{frame}[fragile]{Suffix tries}
+
+    \begin{center}
+\begin{forest}
+for tree={
+    circle,
+    fill=black!50,
+    minimum size=12pt,inner sep=0pt, font=\tiny
+  % circle,
+  % black,
+  % draw,
+  % fill=blue!40,
+}
+  [{}
+    [{}, edge label={node [midway, above left] {B}}
+      [{}, edge label={node [midway, right] {A}}
+        [{}, edge label={node [midway, right] {N}}
+          [,phantom]
+          [{}, edge label={node [midway, left] {A}}
+            [{}, edge label={node [midway, left] {N}}
+                [{}, edge label={node [midway, left] {I}}, fill=black!10
+                ]
+                [,phantom]
+            ]
+            [,phantom]
+          ]
+          [,phantom]
+        ]
+        [,phantom]
+      ]
+      [,phantom]
+    ]
+    [{}, edge label={node [midway, below right] {I}}, fill=black!10
+        [,phantom]
+    ]
+    [{}, edge label={node [midway, right] {N}}
+        % [,phantom]
+        [{}, edge label={node [midway, left] {I}}, fill=black!10
+        ]
+      [{}, edge label={node [midway, right] {A}}
+        [,phantom]
+        [{}, edge label={node [midway, right] {N}}
+          [,phantom]
+          [{}, edge label={node [midway, right] {I}}, fill=black!10
+          ]
+        ]
+      ]
+        [,phantom]
+    ]
+    [{}, edge label={node [midway, above right] {A}}
+      [,phantom]
+      [{}, edge label={node [midway, right] {N}}
+          [{}, edge label={node [midway, left] {I}}, fill=black!10 ]
+        [{}, edge label={node [midway, right] {A}}
+          [,phantom]
+          [{}, edge label={node [midway, right] {N}}
+            [,phantom]
+            [{}, edge label={node [midway, right] {I}}, fill=black!10
+            ]
+          ]
+        ]
+      ]
+    ]
+  ]
+\end{forest}
+\end{center}
+\end{frame}
+
+% TODO: Applications of Suffix trie
+\begin{frame}{Suffix tries}
+    \vspace{20pt}
+    \bi
+        \item There are a lot of cool things we can do with suffix tries
+        \vspace{10pt}
+        \item Example: String matching
+        \vspace{5pt}
+        \item If a string $T$ is a substring in $S$, then (obviously) it has to start at some suffix of $S$
+        \item So we can simply look for $T$ in the suffix trie of $S$, ignoring whether the last node is an end node or not
+        \vspace{5pt}
+        \item This is just $O(m)$...
+    \ei
+\end{frame}
+
+\begin{frame}[fragile]{Suffix tries}
+
+    \begin{center}
+\begin{forest}
+for tree={
+    circle,
+    fill=black!50,
+    minimum size=12pt,inner sep=0pt, font=\tiny
+  % circle,
+  % black,
+  % draw,
+  % fill=blue!40,
+}
+  [{}, fill=red!50
+    [{}, edge label={node [midway, above left] {B}}
+      [{}, edge label={node [midway, right] {A}}
+        [{}, edge label={node [midway, right] {N}}
+          [,phantom]
+          [{}, edge label={node [midway, left] {A}}
+            [{}, edge label={node [midway, left] {N}}
+                [{}, edge label={node [midway, left] {I}}, fill=black!10
+                ]
+                [,phantom]
+            ]
+            [,phantom]
+          ]
+          [,phantom]
+        ]
+        [,phantom]
+      ]
+      [,phantom]
+    ]
+    [{}, edge label={node [midway, below right] {I}}, fill=black!10
+        [,phantom]
+    ]
+    [{}, edge label={node [midway, right] {N}}, fill=red!50
+        % [,phantom]
+        [{}, edge label={node [midway, left] {I}}, fill=black!10
+        ]
+      [{}, edge label={node [midway, right] {A}}, fill=red!50
+        [,phantom]
+        [{}, edge label={node [midway, right] {N}}, fill=red!50
+          [,phantom]
+          [{}, edge label={node [midway, right] {I}}, fill=black!10
+          ]
+        ]
+      ]
+        [,phantom]
+    ]
+    [{}, edge label={node [midway, above right] {A}}
+      [,phantom]
+      [{}, edge label={node [midway, right] {N}}
+          [{}, edge label={node [midway, left] {I}}, fill=black!10 ]
+        [{}, edge label={node [midway, right] {A}}
+          [,phantom]
+          [{}, edge label={node [midway, right] {N}}
+            [,phantom]
+            [{}, edge label={node [midway, right] {I}}, fill=black!10
+            ]
+          ]
+        ]
+      ]
+    ]
+  ]
+\end{forest}
+\end{center}
+\end{frame}
+
+% TODO: Construction of Suffix tries is too slow...
+\begin{frame}{Suffix tries}
+    \vspace{20pt}
+    \bi
+        \item String matching is fast if we have the suffix trie for $S$
+            \vspace{10pt}
+        \item But what is the time complexity of suffix trie construction?
+        \item There are $n$ suffixes, and it takes $O(n)$ to insert each of them
+        \item So $O(n^2)$, which is pretty slow
+            \vspace{10pt}
+        \item Can we do better?
+        \item There can be up to $n^2$ nodes in the graph, so this is actually optimal...
+    \ei
+\end{frame}
+
+% TODO: Suffix tree
+\begin{frame}{Suffix trees}
+    \vspace{30pt}
+    \bi
+        \item There exists a compressed version of a suffix trie, called a suffix tree
+        \vspace{10pt}
+    \item It can be constructed in $O(n)$, and has all the features that suffix tries have
+    \item But the $O(n)$ construction algorithm is pretty complex, a big disadvantage for us
+    \ei
+\end{frame}
+
+% TODO: Suffix array
+\begin{frame}{Suffix arrays}
+    \vspace{30pt}
+    \bi
+        \item A variation of the previous structures
+        \item Can do everything the other structures can do, with a small overhead
+        \item Can be constructed pretty quickly with relatively simple code
+    \ei
+\end{frame}
+
+\begin{frame}[fragile]{Suffix arrays}
+    \bi
+        \item Take all the suffixes of $S$
+    \ei
+    \begin{minted}{cpp}
+banani
+anani
+nani
+ani
+ni
+i
+
+    \end{minted}
+    \bi
+        \item and sort them
+    \ei
+    \begin{minted}{cpp}
+
+anani
+ani
+banani
+i
+nani
+ni
+    \end{minted}
+
+\end{frame}
+
+\begin{frame}[fragile]{Suffix arrays}
+    \vspace{40pt}
+
+    \bi
+        \item We can use this array to do everything that suffix tries can do
+            \vspace{10pt}
+        \item Like string matching
+    \ei
+\end{frame}
+
+\begin{frame}[fragile]{Suffix arrays}
+    \vspace{10pt}
+    \bi
+\item Let's look for \texttt{nan}
+\item<2-> The first letter in the string has to be \texttt{n}, so we can binary search for the range of strings starting with \texttt{n}
+    \ei
+    \vspace{10pt}
+    \begin{minted}{cpp}
+
+anani
+ani
+banani
+i
+nani
+ni
+    \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{Suffix arrays}
+    \vspace{10pt}
+    \bi
+\item Let's look for \texttt{nan}
+\item The first letter in the string has to be \texttt{n}, so we can binary search for the range of strings starting with \texttt{n}
+    \ei
+    \vspace{10pt}
+    \begin{minted}{cpp}
+
+
+
+
+
+nani
+ni
+    \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{Suffix arrays}
+    \vspace{10pt}
+    \bi
+\item Let's look for \texttt{nan}
+\item The second letter in the string has to be \texttt{a}, so we can binary search for the range of strings that have \texttt{a} as the second letter
+    \ei
+    \vspace{10pt}
+    \begin{minted}{cpp}
+
+
+
+
+
+nani
+ni
+    \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{Suffix arrays}
+    \vspace{10pt}
+    \bi
+\item Let's look for \texttt{nan}
+\item The second letter in the string has to be \texttt{a}, so we can binary search for the range of strings that have \texttt{a} as the second letter
+    \ei
+    \vspace{10pt}
+    \begin{minted}{cpp}
+nani
+    \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{Suffix arrays}
+    \vspace{10pt}
+    \bi
+\item Let's look for \texttt{nan}
+\item The third letter in the string has to be \texttt{n}, so we can binary search for the range of strings that have \texttt{n} as the third letter
+    \ei
+    \vspace{10pt}
+    \begin{minted}{cpp}
+nani
+    \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{Suffix arrays}
+    \vspace{10pt}
+    \bi
+\item Let's look for \texttt{nan}
+\item The third letter in the string has to be \texttt{n}, so we can binary search for the range of strings that have \texttt{n} as the third letter
+    \ei
+    \vspace{10pt}
+    \begin{minted}{cpp}
+nani
+    \end{minted}
+    \bi
+\item<2-> If there is at least one string left, we have a match
+    \ei
+\end{frame}
+
+\begin{frame}{Suffix arrays}
+    \vspace{30pt}
+    \bi
+        \item Time complexity?
+            \vspace{5pt}
+        \item For each letter in $T$, we do two binary searches on the $n$ suffixes to find the new range
+        \item Time complexity is $O(m \times \log n)$
+            \vspace{10pt}
+        \item A bit slower than doing it with a suffix trie, but still not bad
+    \ei
+\end{frame}
+
+\begin{frame}{Suffix arrays}
+    \vspace{30pt}
+    \bi
+        \item But how do we construct a suffix array for a string?
+            \vspace{10pt}
+        \item A simple \texttt{sort(suffixes)} is $O(n^2\log(n))$, because comparing two suffixes is $O(n)$
+        \item And we still have the same problem as with suffix tries, there are almost $n^2$ characters if we store all suffixes
+    \ei
+\end{frame}
+
+\begin{frame}[fragile]{Suffix arrays}
+    \bi
+        \item The second problem is easy to fix
+        \item Just store the indices of the suffixes
+    \ei
+    \begin{minted}[fontsize=\footnotesize]{cpp}
+anani
+ani
+banani
+i
+nani
+ni
+    \end{minted}
+    \bi
+        \item becomes
+    \ei
+    \begin{minted}[fontsize=\footnotesize]{cpp}
+1: anani
+3: ani
+0: banani
+5: i
+2: nani
+4: ni
+    \end{minted}
+\end{frame}
+
+\begin{frame}{Suffix arrays}
+    \bi
+        \item What about the construction?
+        \item In short, we
+            \bi
+                \item sort all suffixes by only looking at the first letter
+                \item sort all suffixes by only looking at the first 2 letters
+                \item sort all suffixes by only looking at the first 4 letters
+                \item sort all suffixes by only looking at the first 8 letters
+                \item \ldots
+                \item sort all suffixes by only looking at the first $2^i$ letters
+                \item \ldots
+            \ei
+        \vspace{10pt}
+    \item If we use an $O(n\log n)$ sorting algorithm, this is $O(n\log^2 n)$
+    \item We can also use an $O(n)$ sorting algorithm, since all sorted values are between $0$ and $n$, bringing it down to $O(n \log n)$
+    \ei
+\end{frame}
+
+\begin{frame}[fragile]{Suffix arrays}
+    \begin{minted}[fontsize=\footnotesize]{cpp}
+struct suffix_array {
+    struct entry {
+        pair<int, int> nr;
+        int p;
+
+        bool operator <(const entry &other) {
+            return nr < other.nr;
+        }
+    };
+
+
+    string s;
+    int n;
+    vector<vector<int> > P;
+    vector<entry> L;
+    vi idx;
+
+    // constructor
+};
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{Suffix arrays}
+    \begin{minted}[fontsize=\tiny]{cpp}
+suffix_array(string _s) : s(_s), n(s.size()) {
+    L = vector<entry>(n);
+    P.push_back(vi(n));
+    idx = vi(n);
+
+    for (int i = 0; i < n; i++) {
+        P[0][i] = s[i];
+    }
+
+    for (int stp = 1, cnt = 1; (cnt >> 1) < n; stp++, cnt <<= 1) {
+        P.push_back(vi(n));
+        for (int i = 0; i < n; i++) {
+            L[i].p = i;
+            L[i].nr = make_pair(P[stp - 1][i], i + cnt < n ? P[stp - 1][i + cnt] : -1);
+        }
+
+        sort(L.begin(), L.end());
+        for (int i = 0; i < n; i++) {
+            if (i > 0 && L[i].nr == L[i - 1].nr) {
+                P[stp][L[i].p] = P[stp][L[i - 1].p];
+            } else {
+                P[stp][L[i].p] = i;
+            }
+        }
+    }
+
+    for (int i = 0; i < n; i++) {
+        idx[P[P.size() - 1][i]] = i;
+    }
+}
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{Suffix arrays}
+    \bi
+        \item There is also one other useful operation on suffix arrays
+        \item Finding the longest common prefix (lcp) of two suffixes of $S$
+    \ei
+
+    \begin{minted}[fontsize=\footnotesize]{cpp}
+1: anani
+3: ani
+0: banani
+5: i
+2: nani
+4: ni
+    \end{minted}
+
+    \bi
+\item \texttt{lcp(1,3) = 2}
+\item \texttt{lcp(2,1) = 0}
+    \vspace{10pt}
+\item This function can be implemented in $O(\log n)$ by using intermediate results from the suffix array construction
+    \ei
+\end{frame}
+
+\begin{frame}[fragile]{Suffix arrays}
+    \begin{minted}[fontsize=\footnotesize]{cpp}
+int lcp(int x, int y) {
+    int res = 0;
+    if (x == y) return n - x;
+    for (int k = P.size() - 1; k >= 0 && x < n && y < n; k--) {
+        if (P[k][x] == P[k][y]) {
+            x += 1 << k;
+            y += 1 << k;
+            res += 1 << k;
+        }
+    }
+    return res;
+}
+\end{minted}
+\end{frame}
+
+\begin{frame}{Longest common substring}
+    \vspace{30pt}
+    \bi
+        \item Given two strings $S$ and $T$, find their longest common substring
+            \vspace{10pt}
+        \item \texttt{S = banani}
+        \item \texttt{T = kanina}
+            \vspace{10pt}
+        \item Their longest common substring is \texttt{ani}
+            \vspace{20pt}
+        \item \textit{see example}
+    \ei
+\end{frame}
+
+\end{document}
+

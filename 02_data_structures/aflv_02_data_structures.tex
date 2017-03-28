@@ -1,0 +1,940 @@
+\documentclass[12pt,t]{beamer}
+\usepackage{graphicx}
+\setbeameroption{hide notes}
+\setbeamertemplate{note page}[plain]
+
+% get rid of junk
+\usetheme{default}
+\beamertemplatenavigationsymbolsempty
+\hypersetup{pdfpagemode=UseNone} % don't show bookmarks on initial view
+
+% font
+\usepackage{fontspec}
+\setsansfont{TeX Gyre Heros}
+\setbeamerfont{note page}{family*=pplx,size=\footnotesize} % Palatino for notes
+% "TeX Gyre Heros can be used as a replacement for Helvetica"
+% In Unix, unzip the following into ~/.fonts
+% In Mac, unzip it, double-click the .otf files, and install using "FontBook"
+%   http://www.gust.org.pl/projects/e-foundry/tex-gyre/heros/qhv2.004otf.zip
+
+% named colors
+\definecolor{offwhite}{RGB}{249,242,215}
+\definecolor{foreground}{RGB}{255,255,255}
+\definecolor{background}{RGB}{24,24,24}
+\definecolor{title}{RGB}{107,174,214}
+\definecolor{gray}{RGB}{155,155,155}
+\definecolor{subtitle}{RGB}{102,255,204}
+\definecolor{hilight}{RGB}{102,255,204}
+\definecolor{vhilight}{RGB}{255,111,207}
+\definecolor{lolight}{RGB}{155,155,155}
+%\definecolor{green}{RGB}{125,250,125}
+
+% use those colors
+\setbeamercolor{titlelike}{fg=title}
+\setbeamercolor{subtitle}{fg=subtitle}
+\setbeamercolor{institute}{fg=gray}
+\setbeamercolor{normal text}{fg=foreground,bg=background}
+\setbeamercolor{item}{fg=foreground} % color of bullets
+\setbeamercolor{subitem}{fg=gray}
+\setbeamercolor{itemize/enumerate subbody}{fg=gray}
+\setbeamertemplate{itemize subitem}{{\textendash}}
+\setbeamerfont{itemize/enumerate subbody}{size=\footnotesize}
+\setbeamerfont{itemize/enumerate subitem}{size=\footnotesize}
+
+% page number
+\setbeamertemplate{footline}{%
+    \raisebox{5pt}{\makebox[\paperwidth]{\hfill\makebox[20pt]{\color{gray}
+          \scriptsize\insertframenumber}}}\hspace*{5pt}}
+
+% add a bit of space at the top of the notes page
+\addtobeamertemplate{note page}{\setlength{\parskip}{12pt}}
+
+% a few macros
+\newcommand{\bi}{\begin{itemize}}
+\newcommand{\ei}{\end{itemize}}
+\newcommand{\ig}{\includegraphics}
+\newcommand{\subt}[1]{{\footnotesize \color{subtitle} {#1}}}
+
+% title info
+\title{Data structures and libraries}
+\author{Bjarki Ágúst Guðmundsson \\ Tómas Ken Magnússon}
+\institute{\href{http://ru.is/td}{School of Computer Science} \\[2pt] \href{http://ru.is}{Reykjavík University}}
+\date{Árangursrík forritun og lausn verkefna}
+% \date{\href{http://www.biostat.wisc.edu/~kbroman}{\tt \scriptsize biostat.wisc.edu/{\textasciitilde}kbroman}
+% \\[-4pt]
+% \href{http://github.com/kbroman}{\tt \scriptsize github.com/kbroman}
+% }
+
+
+% Tikz
+\usepackage{tikz}
+\usetikzlibrary{arrows,shapes}
+
+% Minted
+\usepackage{minted}
+\usemintedstyle{monokai}
+\newminted{cpp}{fontsize=\footnotesize}
+
+% Graph styles
+\tikzstyle{vertex}=[circle,fill=black!50,minimum size=15pt,inner sep=0pt, font=\small]
+\tikzstyle{selected vertex} = [vertex, fill=red!24]
+\tikzstyle{edge} = [draw,thick,-]
+\tikzstyle{dedge} = [draw,thick,->]
+\tikzstyle{weight} = [font=\scriptsize,pos=0.5]
+\tikzstyle{selected edge} = [draw,line width=2pt,-,red!50]
+\tikzstyle{ignored edge} = [draw,line width=5pt,-,black!20]
+
+
+\begin{document}
+
+% title slide
+{
+    \setbeamertemplate{footline}{} % no page number here
+    \frame{
+        \titlepage
+    }
+}
+
+
+\begin{frame}{Today we're going to cover}
+    \vspace{30pt}
+    \bi
+        \item Basic data types
+        \item Big integers
+        \item Why we need data structures
+        \item Data structures you already know
+        \item Sorting and searching
+        \item Using bitmasks to represent sets
+        \item Common applications of the data structures
+        \item Augmenting binary search trees
+        \item Representing graphs
+        % \item Example problems
+    \ei
+\end{frame}
+
+% \section{Basic data types}
+% \tableofcontents
+
+\begin{frame}{Basic data types}
+    \bi
+        \vspace{20pt}
+
+        \item You should all be familiar with the basic data types:
+
+        \bi
+            \item \texttt{bool}: a boolean (\texttt{true}/\texttt{false})
+            \vspace{5pt}
+            \item \texttt{char}: an 8-bit signed integer (often used to represent characters with ASCII)
+            \item \texttt{short}: a 16-bit signed integer
+            \item \texttt{int}: a 32-bit signed integer
+            \item \texttt{long long}: a 64-bit signed integer
+            \vspace{5pt}
+            \item \texttt{float}: a 32-bit floating-point number
+            \item \texttt{double}: a 64-bit floating-point number
+            \item \texttt{long double}: a 128-bit floating-point number
+            \vspace{10pt}
+            \item \texttt{string}: a string of characters
+        \ei
+    \ei
+\end{frame}
+
+\begin{frame}{Basic data types}
+
+    {\scriptsize
+        \begin{center}
+            \begin{tabular}{l|lll}
+                Type & Bytes & Min value & Max value \\
+                \hline
+                bool & 1 & & \\
+                char & 1 & -128 & 127 \\
+                short & 2 & -32768 & 32767 \\
+                int & 4 & -2148364748 & 2147483647 \\
+                long long & 8 & -9223372036854775808 & 9223372036854775807 \\
+                          & $n$ & $-2^{8n-1}$ & $2^{8n-1}-1$
+            \end{tabular}
+        \end{center}
+    }
+
+    {\scriptsize
+        \begin{center}
+            \begin{tabular}{l|lll}
+                Type & Bytes & Min value & Max value \\
+                \hline
+                unsigned char & 1 & 0 & 255 \\
+                unsigned short & 2 & 0 & 65535 \\
+                unsigned int & 4 & 0 & 4294967295 \\
+                unsigned long long & 8 & 0 & 18446744073709551615 \\
+                    & $n$ & $0$ & $2^{8n}-1$
+            \end{tabular}
+        \end{center}
+    }
+
+    {\scriptsize
+        \begin{center}
+            \begin{tabular}{l|llll}
+                Type & Bytes & Min value & Max value & Precision \\
+                \hline
+                float & 4 & $\approx -3.4\times 10^{-38}$ & $\approx 3.4\times 10^{-38}$ & $\approx 7$ digits \\
+                double & 8 & $\approx -1.7\times 10^{-308}$ & $\approx 1.7\times 10^{-308}$ & $\approx 14$ digits \\
+            \end{tabular}
+        \end{center}
+    }
+
+\end{frame}
+
+% \section{Big integers}
+% \tableofcontents
+
+\begin{frame}{Big integers}
+    \bi
+        \item What if we need to represent and do computations with very large integers, i.e.\ something that doesn't fit in a \texttt{long long}
+
+        \vspace{5pt}
+        \item Simple idea: Store the integer as a string
+        \vspace{5pt}
+        \item But how do we perform arithmetic on a pair of strings?
+        \item We can use the same algorithms as we learned in elementary school
+            \bi
+                \item Addition: Add digit-by-digit, and maintain the carry
+                \item Subtraction: Similar to addition
+                \item Multiplication: Long multiplication
+                \item Division: Long division
+                \item Modulo: Long division
+            \ei
+    \ei
+\end{frame}
+
+\begin{frame}{Example problem: Integer Inquiry}
+    \bi
+        \item http://uva.onlinejudge.org/external/4/424.html
+    \ei
+\end{frame}
+
+% \section{Data structures}
+% \tableofcontents
+
+\begin{frame}{Why do we need data structures?}
+    \bi
+        \vspace{25pt}
+
+        \item Sometimes our data needs to be organized in a way that allows one or more of
+            \bi
+                \item Efficient querying
+                \item Efficient inserting
+                \item Efficient deleting
+                \item Efficient updating
+            \ei
+        \item Sometimes we need a better way to represent our data
+            \bi
+                \item How do we represent large integers?
+                \item How do we represent graphs?
+            \ei
+
+        \item Data structures help us achieve those things
+    \ei
+\end{frame}
+
+\begin{frame}{Data structures you've seen before}
+    \vspace{5pt}
+    \bi
+\item Static arrays \onslide<2->{- {\color{vhilight}int arr[10]}}
+\item Dynamic arrays \onslide<2->{- {\color{vhilight}vector<int>}}
+\item Linked lists \onslide<2->{- {\color{vhilight}list<int>}}
+\item Stacks \onslide<2->{- {\color{vhilight}stack<int>}}
+\item Queues \onslide<2->{- {\color{vhilight}queue<int>}}
+\item Priority Queues \onslide<2->{- {\color{vhilight}priority\_{}queue<int>}}
+\item Sets \onslide<2->{- {\color{vhilight}set<int>}}
+\item Maps \onslide<2->{- {\color{vhilight}map<int, int>}}
+
+    \onslide<3->{
+        \vspace{15pt}
+        \item Usually it's best to use the standard library implementations
+                \bi
+                    \item Almost surely bug-free and fast
+                    \item We don't need to write any code
+                \ei
+        \item Sometimes we need our own implementation
+            \bi
+                \item When we want more flexibility
+                \item When we want to customize the data structure
+            \ei
+    }
+    \ei
+\end{frame}
+
+\begin{frame}{Sorting and searching}
+    \vspace{30pt}
+
+    \bi
+        \item Very common operations:
+            \bi
+                \item Sorting an array \onslide<2->{- {\color{vhilight}sort(arr.begin(), arr.end())}}
+                \item Searching an unsorted array \onslide<2->{- {\color{vhilight}find(arr.begin(), arr.end(), x)}}
+                \item Searching a sorted array \onslide<2->{- {\color{vhilight}lower\_{}bound(arr.begin(), arr.end(), x)}}
+            \ei
+
+        \item Again, usually in the standard library
+        \item We'll need different versions of binary search later which need custom code, but lower\_{}bound is enough for now
+    \ei
+\end{frame}
+
+\begin{frame}[fragile]{Representing sets}
+    \vspace{30pt}
+    \bi
+        \item We have a small ($n\leq 30$) number of items
+        \item We label them with integers in the range $0,1,\ldots,n-1$
+        \item We can represent sets of these items as a 32-bit integer
+        \item The $i$th item is in the set represented by the integer $x$ if the $i$th bit in $x$ is $1$
+        \item Example:
+            \bi
+                \item We have the set $\{0,3,4\}$
+                \item \mint{cpp}.int x = (1<<0) | (1<<3) | (1<<4);.
+            \ei
+    \ei
+\end{frame}
+
+\begin{frame}[fragile]{Representing sets}
+    \vspace{5pt}
+    \bi
+        \item Empty set:
+            \mint{cpp}.   0.
+        \item Single element set:
+            \mint{cpp}.   1<<i.
+        \item The universe set (i.e.\ all elements):
+            \mint{cpp}.   (1<<n)-1.
+        \item Union of sets:
+            \mint{cpp}.   x|y.
+        \item Intersection of sets: \mint{cpp}.   x&y.
+        \item Complement of a set: \mint{cpp}.   ~x & ((1<<n)-1).
+    \ei
+\end{frame}
+
+
+\begin{frame}[fragile]{Representing sets}
+    \vspace{25pt}
+    \bi
+        \item Check if an element is in the set:
+            \begin{minted}{cpp}
+
+if (x & (1<<i)) {
+    // yes
+} else {
+    // no
+}
+            \end{minted}
+    \ei
+\end{frame}
+
+\begin{frame}{Representing sets}
+    \vspace{25pt}
+    \bi
+        \item Why do this instead of using {\color{vhilight}set<int>}?
+        \item Very lightweight representation
+        \item All subsets of the $n$ elements can be represented by integers in the range $0\ldots 2^{n}-1$
+        \item Allows for easily iterating through all subsets (we'll see this later)
+        \item Allows for easily using a set as an index of an array (we'll see this later)
+    \ei
+\end{frame}
+
+\begin{frame}{Applications of Arrays and Linked Lists}
+    \vspace{40pt}
+    \bi
+        \item Too many to list
+        \item Most problems require storing data, usually in an array
+    \ei
+\end{frame}
+
+\begin{frame}{Example problem: Broken Keyboard}
+    \bi
+        \item http://uva.onlinejudge.org/external/119/11988.html
+    \ei
+\end{frame}
+
+\begin{frame}{Applications of Stacks}
+    \bi
+        \item Processing events in a first-in first-out order
+        \item Simulating recursion
+        \item Depth-first search in a graph
+        \item Reverse a sequence
+        \item Matching brackets
+        \item And a lot more
+    \ei
+\end{frame}
+
+\begin{frame}{Applications of Queues}
+    \bi
+        \item Processing events in a first-in first-out order
+        \item Breadth-first search in a graph
+        \item And a lot more
+    \ei
+\end{frame}
+
+\begin{frame}{Applications of Priority Queues}
+    \bi
+        \item Processing events in order of priority
+        \item Finding a shortest path in a graph
+        \item Some greedy algorithms
+        \item And a lot more
+    \ei
+\end{frame}
+
+\begin{frame}{Applications of Sets}
+    \bi
+        \item Keep track of distinct items
+        \item Have we seen an item before?
+        \item If implemented as a binary search tree:
+            \bi
+        \item Find the successor of an element (the smallest element that is greater than the given element)
+        \item Count how many elements are less than a given element
+        \item Count how many elements are between two given elements
+        \item Find the $k$th largest element
+            \ei
+
+        \item And a lot more
+    \ei
+\end{frame}
+
+\begin{frame}{Applications of Maps}
+    \bi
+        \item Associating a value with a key
+        \item As a frequency table
+        \item As a memory when we're doing Dynamic Programming (later)
+        \item And a lot more
+    \ei
+\end{frame}
+
+\begin{frame}{Augmenting Data Structures}
+    \bi
+        \item Sometimes we can store extra information in our data structures to gain more functionality
+        \item Usually we can't do this to data structures in the standard library
+        \item Need our own implementation that we can customize
+        \item Example: Augmenting binary search trees
+    \ei
+\end{frame}
+
+\begin{frame}[fragile]{Augmenting Binary Search Trees}
+
+    \begin{columns}[T]
+        \begin{column}{.45\textwidth}
+            \vspace{20pt}
+
+            \bi
+                \item We have a binary search tree and want to efficiently:
+                    \bi
+                        \item Count number of elements $<x$
+                        \item Find the $k$th smallest element
+                    \ei
+
+                \item Naive method is to go through all vertices, but that is slow: $O(n)$
+            \ei
+        \end{column}%
+        \hfill%
+        \begin{column}{.55\textwidth}
+            \begin{figure}
+\tikzset{
+  treenode/.style = {align=center, inner sep=0pt, text centered,
+    font=\sffamily},
+  vertex/.style = {treenode, circle, white, font=\sffamily\bfseries\tiny, draw=white,
+    text width=1.8em},% arbre rouge noir, noeud noir
+}
+
+\begin{tikzpicture}[->,>=stealth',level/.style={sibling distance = 5cm/#1,
+  level distance = 1.8cm},scale=0.6] 
+\node [vertex] {33}
+    child{ node [vertex] {15}
+            child{ node [vertex] {10} 
+            	child{ node [vertex] {5} } %for a named pointer
+                % child{ node [vertex] {}}
+            }
+            child{ node [vertex] {20}
+							child{ node [vertex] {18}}
+							% child{ node [vertex] {}}
+            }                            
+    }
+    child{ node [vertex] {47}
+            child{ node [vertex] {38} 
+							child{ node [vertex] {36}
+                                child { node [vertex] {34} }
+                                child { node [vertex] {37} }
+                            }
+							child{ node [vertex] {39}}
+            }
+            child{ node [vertex] {51}
+							child{ node [vertex] {49}}
+							% child{ node [vertex] {}}
+            }
+		}
+; 
+\end{tikzpicture}
+            \end{figure}
+        \end{column}%
+    \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Augmenting Binary Search Trees}
+
+    \begin{columns}[T]
+        \begin{column}{.45\textwidth}
+            \vspace{20pt}
+
+            \bi
+                \item Idea: In each vertex store the size of the subtree
+                \item This information can be maintained when we insert/delete elements without adding time complexity
+            \ei
+        \end{column}%
+        \hfill%
+        \begin{column}{.55\textwidth}
+            \begin{figure}
+\tikzset{
+  treenode/.style = {align=center, inner sep=0pt, text centered,
+    font=\sffamily},
+  vertex/.style = {treenode, circle, white, font=\sffamily\bfseries\tiny, draw=white,
+    text width=1.8em},% arbre rouge noir, noeud noir
+}
+
+\begin{tikzpicture}[->,>=stealth',level/.style={sibling distance = 5cm/#1,
+  level distance = 1.8cm},scale=0.6] 
+\node [vertex] {33, 14}
+    child{ node [vertex] {15, 5}
+            child{ node [vertex] {10, 2} 
+            	child{ node [vertex] {5, 1} } %for a named pointer
+                % child{ node [vertex] {}}
+            }
+            child{ node [vertex] {20, 2}
+							child{ node [vertex] {18, 1}}
+							% child{ node [vertex] {}}
+            }                            
+    }
+    child{ node [vertex] {47, 8}
+            child{ node [vertex] {38, 5} 
+							child{ node [vertex] {36, 3}
+                                child { node [vertex] {34, 1} }
+                                child { node [vertex] {37, 1} }
+                            }
+							child{ node [vertex] {39, 1}}
+            }
+            child{ node [vertex] {51, 2}
+							child{ node [vertex] {49, 1}}
+							% child{ node [vertex] {}}
+            }
+		}
+; 
+\end{tikzpicture}
+            \end{figure}
+        \end{column}%
+    \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Augmenting Binary Search Trees}
+
+    \begin{columns}[T]
+        \begin{column}{.45\textwidth}
+            \bi
+                \item Count number of elements $<38$
+                    \bi
+                        \item Search for $38$ in the tree
+                        \item Count the vertices that we pass by that are less than $x$
+                        \item When we are at a vertex where we should go right, get the size of the left subtree and add it to our count
+                    \ei
+            \ei
+        \end{column}%
+        \hfill%
+        \begin{column}{.55\textwidth}
+            \begin{figure}
+\tikzset{
+  treenode/.style = {align=center, inner sep=0pt, text centered,
+    font=\sffamily},
+  vertex/.style = {treenode, circle, white, font=\sffamily\bfseries\tiny, draw=white,
+    text width=1.8em},% arbre rouge noir, noeud noir
+}
+
+\begin{tikzpicture}[->,>=stealth',level/.style={sibling distance = 5cm/#1,
+  level distance = 1.8cm},scale=0.6] 
+\node [vertex] {33, 14}
+    child{ node [vertex] {15, 5}
+            child{ node [vertex] {10, 2} 
+            	child{ node [vertex] {5, 1} } %for a named pointer
+                % child{ node [vertex] {}}
+            }
+            child{ node [vertex] {20, 2}
+							child{ node [vertex] {18, 1}}
+							% child{ node [vertex] {}}
+            }                            
+    }
+    child{ node [vertex] {47, 8}
+            child{ node [vertex] {38, 5} 
+							child{ node [vertex] {36, 3}
+                                child { node [vertex] {34, 1} }
+                                child { node [vertex] {37, 1} }
+                            }
+							child{ node [vertex] {39, 1}}
+            }
+            child{ node [vertex] {51, 2}
+							child{ node [vertex] {49, 1}}
+							% child{ node [vertex] {}}
+            }
+		}
+; 
+\end{tikzpicture}
+            \end{figure}
+        \end{column}%
+    \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Augmenting Binary Search Trees}
+
+    \begin{columns}[T]
+        \begin{column}{.45\textwidth}
+            \bi
+                \item Count number of elements $<38$
+                    \bi
+                        \item Search for $38$ in the tree
+                        \item Count the vertices that we pass by that are less than $x$
+                        \item When we are at a vertex where we should go right, get the size of the left subtree and add it to our count
+                    \ei
+                \vspace{2pt}
+                \item Time complexity $O(\log n)$
+            \ei
+        \end{column}%
+        \hfill%
+        \begin{column}{.55\textwidth}
+            \begin{figure}
+\tikzset{
+  treenode/.style = {align=center, inner sep=0pt, text centered,
+    font=\sffamily},
+  vertex/.style = {treenode, circle, white, font=\sffamily\bfseries\tiny, draw=white, text width=1.8em},% arbre rouge noir, noeud noir
+  rvertex/.style = {treenode, circle, white, font=\sffamily\bfseries\tiny, draw=red, text width=1.8em},% arbre rouge noir, noeud noir
+}
+
+\begin{tikzpicture}[->,>=stealth',level/.style={sibling distance = 5cm/#1,
+  level distance = 1.8cm},scale=0.6] 
+\node [rvertex] {33, 14}
+    child{ node [vertex] {15, {\color{red}5}}
+            child{ node [vertex] {10, 2} 
+            	child{ node [vertex] {5, 1} } %for a named pointer
+                % child{ node [vertex] {}}
+            }
+            child{ node [vertex] {20, 2}
+							child{ node [vertex] {18, 1}}
+							% child{ node [vertex] {}}
+            }                            
+    }
+    child{ node [rvertex] {47, 8}
+            child{ node [rvertex] {38, 5} 
+                            child{ node [vertex] {36, {\color{red}3}}
+                                child { node [vertex] {34, 1} }
+                                child { node [vertex] {37, 1} }
+                            }
+							child{ node [vertex] {39, 1}}
+            }
+            child{ node [vertex] {51, 2}
+							child{ node [vertex] {49, 1}}
+							% child{ node [vertex] {}}
+            }
+		}
+; 
+\end{tikzpicture}
+            \end{figure}
+        \end{column}%
+    \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Augmenting Binary Search Trees}
+
+    \begin{columns}[T]
+        \begin{column}{.45\textwidth}
+            \bi
+                \item Find $k$th smallest element
+                    \bi
+                        \item We're on a vertex whose left subtree is of size $m$
+                        \item If $k = m+1$, we found it
+                        \item If $k \leq m$, look for the $k$th smallest element in the left subtree
+                        \item If $k > m+1$, look for the $k-m-1$st smallest element in the right subtree
+                    \ei
+                \vspace{2pt}
+            \ei
+        \end{column}%
+        \hfill%
+        \begin{column}{.55\textwidth}
+            \begin{figure}
+\tikzset{
+  treenode/.style = {align=center, inner sep=0pt, text centered,
+    font=\sffamily},
+  vertex/.style = {treenode, circle, white, font=\sffamily\bfseries\tiny, draw=white, text width=1.8em},% arbre rouge noir, noeud noir
+  rvertex/.style = {treenode, circle, white, font=\sffamily\bfseries\tiny, draw=red, text width=1.8em},% arbre rouge noir, noeud noir
+}
+
+\begin{tikzpicture}[->,>=stealth',level/.style={sibling distance = 5cm/#1,
+  level distance = 1.8cm},scale=0.6] 
+\node [vertex] {33, 14}
+    child{ node [vertex] {15, 5}
+            child{ node [vertex] {10, 2} 
+            	child{ node [vertex] {5, 1} } %for a named pointer
+                % child{ node [vertex] {}}
+            }
+            child{ node [vertex] {20, 2}
+							child{ node [vertex] {18, 1}}
+							% child{ node [vertex] {}}
+            }                            
+    }
+    child{ node [vertex] {47, 8}
+            child{ node [vertex] {38, 5} 
+                            child{ node [vertex] {36, 3}
+                                child { node [vertex] {34, 1} }
+                                child { node [vertex] {37, 1} }
+                            }
+							child{ node [vertex] {39, 1}}
+            }
+            child{ node [vertex] {51, 2}
+							child{ node [vertex] {49, 1}}
+							% child{ node [vertex] {}}
+            }
+		}
+; 
+\end{tikzpicture}
+            \end{figure}
+        \end{column}%
+    \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Augmenting Binary Search Trees}
+
+    \begin{columns}[T]
+        \begin{column}{.45\textwidth}
+            \bi
+                \item Find $k$th smallest element
+                    \bi
+                        \item We're on a vertex whose left subtree is of size $m$
+                        \item If $k = m+1$, we found it
+                        \item If $k \leq m$, look for the $k$th smallest element in the left subtree
+                        \item If $k > m+1$, look for the $m-k-1$st smallest element in the right subtree
+                    \ei
+                \item Example: $k=11$
+            \ei
+        \end{column}%
+        \hfill%
+        \begin{column}{.55\textwidth}
+            \begin{figure}
+\tikzset{
+  treenode/.style = {align=center, inner sep=0pt, text centered,
+    font=\sffamily},
+  vertex/.style = {treenode, circle, white, font=\sffamily\bfseries\tiny, draw=white, text width=1.8em},% arbre rouge noir, noeud noir
+  rvertex/.style = {treenode, circle, white, font=\sffamily\bfseries\tiny, draw=red, text width=1.8em},% arbre rouge noir, noeud noir
+}
+
+\begin{tikzpicture}[->,>=stealth',level/.style={sibling distance = 5cm/#1,
+  level distance = 1.8cm},scale=0.6] 
+\node [rvertex] {33, 14}
+    child{ node [vertex] {15, 5}
+            child{ node [vertex] {10, 2} 
+            	child{ node [vertex] {5, 1} } %for a named pointer
+                % child{ node [vertex] {}}
+            }
+            child{ node [vertex] {20, 2}
+							child{ node [vertex] {18, 1}}
+							% child{ node [vertex] {}}
+            }                            
+    }
+    child{ node [rvertex] {47, 8}
+            child{ node [rvertex] {38, 5} 
+                            child{ node [vertex] {36, 3}
+                                child { node [vertex] {34, 1} }
+                                child { node [vertex] {37, 1} }
+                            }
+							child{ node [rvertex] {39, 1}}
+            }
+            child{ node [vertex] {51, 2}
+							child{ node [vertex] {49, 1}}
+							% child{ node [vertex] {}}
+            }
+		}
+; 
+\end{tikzpicture}
+            \end{figure}
+        \end{column}%
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Representing graphs}
+    \vspace{20pt}
+    \bi
+        \item There are many types of graphs:
+            \bi
+                \item Directed vs. undirected
+                \item Weighted vs. unweighted
+                \item Simple vs. non-simple
+            \ei
+        \item Many ways to represent graphs
+        \item Some special graphs (like trees) have special representations
+        \item Most commonly used (general) representations:
+            \begin{enumerate}
+                \item Adjacency list
+                \item Adjacency matrix
+                \item Edge list
+            \end{enumerate}
+    \ei
+\end{frame}
+
+% TODO: also show directed and weighted versions
+\begin{frame}[fragile]{Adjacency list}
+
+    \begin{columns}[T]
+        \begin{column}{.4\textwidth}
+            \begin{minted}{cpp}
+0: 1, 2
+1: 0, 2
+2: 0, 1, 3
+3: 2
+
+vector<int> adj[4];
+adj[0].push_back(1);
+adj[0].push_back(2);
+adj[1].push_back(0);
+adj[1].push_back(2);
+adj[2].push_back(0);
+adj[2].push_back(1);
+adj[2].push_back(2);
+adj[3].push_back(2);
+            \end{minted}
+        \end{column}%
+        \hfill%
+        \begin{column}{.4\textwidth}
+            \begin{figure}
+                \begin{tikzpicture}[scale=1.8,auto,swap]
+                    \node[vertex] (0) at (0.5,3) {0};
+                    \node[vertex] (1) at (0,2) {1};
+                    \node[vertex] (2) at (1,2) {2};
+                    \node[vertex] (3) at (0.5,1) {3};
+
+                    \path[edge] (0) -- (1);
+                    \path[edge] (2) -- (0);
+                    \path[edge] (2) -- (3);
+                    \path[edge] (1) -- (2);
+
+                    \pgfresetboundingbox
+                    \path [use as bounding box] (0,0) rectangle (1,3.2);
+                \end{tikzpicture}
+            \end{figure}
+        \end{column}%
+    \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Adjacency matrix}
+
+    \begin{columns}[T]
+        \begin{column}{.4\textwidth}
+            \begin{minted}{cpp}
+
+0 1 1 0
+1 0 1 0
+1 1 0 1
+0 0 1 0
+
+bool adj[4][4];
+adj[0][1] = true;
+adj[0][2] = true;
+adj[1][0] = true;
+adj[1][2] = true;
+adj[2][0] = true;
+adj[2][1] = true;
+adj[2][3] = true;
+adj[3][2] = true;
+            \end{minted}
+        \end{column}%
+        \hfill%
+        \begin{column}{.4\textwidth}
+            \begin{figure}
+                \begin{tikzpicture}[scale=1.8,auto,swap]
+                    \node[vertex] (0) at (0.5,3) {0};
+                    \node[vertex] (1) at (0,2) {1};
+                    \node[vertex] (2) at (1,2) {2};
+                    \node[vertex] (3) at (0.5,1) {3};
+
+                    \path[edge] (0) -- (1);
+                    \path[edge] (2) -- (0);
+                    \path[edge] (2) -- (3);
+                    \path[edge] (1) -- (2);
+
+                    \pgfresetboundingbox
+                    \path [use as bounding box] (0,0) rectangle (1,3.2);
+                \end{tikzpicture}
+            \end{figure}
+        \end{column}%
+    \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Edge list}
+
+    \begin{columns}[T]
+        \begin{column}{.4\textwidth}
+            \begin{minted}{cpp}
+
+0, 1
+0, 2
+1, 2
+2, 3
+
+
+
+vector<pair<int, int> > edges;
+edges.push_back(make_pair(0, 1));
+edges.push_back(make_pair(0, 2));
+edges.push_back(make_pair(1, 2));
+edges.push_back(make_pair(2, 3));
+            \end{minted}
+        \end{column}%
+        \hfill%
+        \begin{column}{.4\textwidth}
+            \begin{figure}
+                \begin{tikzpicture}[scale=1.8,auto,swap]
+                    \node[vertex] (0) at (0.5,3) {0};
+                    \node[vertex] (1) at (0,2) {1};
+                    \node[vertex] (2) at (1,2) {2};
+                    \node[vertex] (3) at (0.5,1) {3};
+
+                    \path[edge] (0) -- (1);
+                    \path[edge] (2) -- (0);
+                    \path[edge] (2) -- (3);
+                    \path[edge] (1) -- (2);
+
+                    \pgfresetboundingbox
+                    \path [use as bounding box] (0,0) rectangle (1,3.2);
+                \end{tikzpicture}
+            \end{figure}
+        \end{column}%
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Efficiency}
+
+    \vspace{20pt}
+
+    {
+        \scriptsize
+    \begin{center}
+        \begin{tabular}{lccc}
+            & Adjacency list & Adjacency matrix & Edge list \\
+            Storage & $O(|V| + |E|)$ & $O(|V|^2)$ & $O(|E|)$ \\
+            Add vertex & $O(1)$ & $O(|V|^2)$ & $O(1)$ \\
+            Add edge & $O(1)$ & $O(1)$ & $O(1)$ \\
+            Remove vertex & $O(|E|)$ & $O(|V|^2)$ & $O(|E|)$ \\
+            Remove edge & $O(|E|)$ & $O(1)$ & $O(|E|)$ \\
+            Query: are $u,v$ adjacent? & $O(|V|)$ & $O(1)$ & $O(|E|)$ \\
+        \end{tabular}
+    \end{center}
+    }
+
+    \bi
+        \item Different representations are good for different situations
+    \ei
+\end{frame}
+
+\begin{frame}{Example problem: Easy Problem from Rujia Liu?}
+    \bi
+        \item http://uva.onlinejudge.org/external/119/11991.html
+        % \item http://uva.onlinejudge.org/external/120/12049.html
+    \ei
+\end{frame}
+
+\end{document}
+

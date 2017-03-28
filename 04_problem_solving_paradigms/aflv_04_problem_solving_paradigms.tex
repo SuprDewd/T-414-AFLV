@@ -1,71 +1,27 @@
-\documentclass[12pt,t]{beamer}
-\usepackage{graphicx}
-\setbeameroption{hide notes}
-\setbeamertemplate{note page}[plain]
-
-% get rid of junk
-\usetheme{default}
-\beamertemplatenavigationsymbolsempty
-\hypersetup{pdfpagemode=UseNone} % don't show bookmarks on initial view
-
-% font
-\usepackage{fontspec}
-\setsansfont{TeX Gyre Heros}
-\setbeamerfont{note page}{family*=pplx,size=\footnotesize} % Palatino for notes
-% "TeX Gyre Heros can be used as a replacement for Helvetica"
-% In Unix, unzip the following into ~/.fonts
-% In Mac, unzip it, double-click the .otf files, and install using "FontBook"
-%   http://www.gust.org.pl/projects/e-foundry/tex-gyre/heros/qhv2.004otf.zip
-
-% named colors
-\definecolor{offwhite}{RGB}{249,242,215}
-\definecolor{foreground}{RGB}{255,255,255}
-\definecolor{background}{RGB}{24,24,24}
-\definecolor{title}{RGB}{107,174,214}
-\definecolor{gray}{RGB}{155,155,155}
-\definecolor{subtitle}{RGB}{102,255,204}
-\definecolor{hilight}{RGB}{102,255,204}
-\definecolor{vhilight}{RGB}{255,111,207}
-\definecolor{lolight}{RGB}{155,155,155}
-%\definecolor{green}{RGB}{125,250,125}
-
-% use those colors
-\setbeamercolor{titlelike}{fg=title}
-\setbeamercolor{subtitle}{fg=subtitle}
-\setbeamercolor{institute}{fg=gray}
-\setbeamercolor{normal text}{fg=foreground,bg=background}
-\setbeamercolor{item}{fg=foreground} % color of bullets
-\setbeamercolor{subitem}{fg=gray}
-\setbeamercolor{itemize/enumerate subbody}{fg=gray}
-\setbeamertemplate{itemize subitem}{{\textendash}}
-\setbeamerfont{itemize/enumerate subbody}{size=\footnotesize}
-\setbeamerfont{itemize/enumerate subitem}{size=\footnotesize}
-
-% page number
-\setbeamertemplate{footline}{%
-    \raisebox{5pt}{\makebox[\paperwidth]{\hfill\makebox[20pt]{\color{gray}
-          \scriptsize\insertframenumber}}}\hspace*{5pt}}
-
-% add a bit of space at the top of the notes page
-\addtobeamertemplate{note page}{\setlength{\parskip}{12pt}}
+\documentclass[10pt]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usetheme{metropolis}
+\usepackage{booktabs}
+\usepackage[scale=2]{ccicons}
+\usepackage{pgfplots}
+\usepgfplotslibrary{dateplot}
+\usepackage{xspace}
+\usepackage{pbox}
 
 % a few macros
 \newcommand{\bi}{\begin{itemize}}
 \newcommand{\ei}{\end{itemize}}
 \newcommand{\ig}{\includegraphics}
-\newcommand{\subt}[1]{{\footnotesize \color{subtitle} {#1}}}
-
+\definecolor{hilight}{RGB}{235,129,27}
+\definecolor{vhilight}{RGB}{235,129,27}
 
 % title info
 \title{Problem solving paradigms}
-\author{Bjarki Ágúst Guðmundsson \\ Tómas Ken Magnússon}
+\author{Bjarki Ágúst Guðmundsson\\ Tómas Ken Magnússon}
 \institute{\href{http://ru.is/td}{School of Computer Science} \\[2pt] \href{http://ru.is}{Reykjavík University}}
-\date{Árangursrík forritun og lausn verkefna}
-% \date{\href{http://www.biostat.wisc.edu/~kbroman}{\tt \scriptsize biostat.wisc.edu/{\textasciitilde}kbroman}
-% \\[-4pt]
-% \href{http://github.com/kbroman}{\tt \scriptsize github.com/kbroman}
-% }
-
+\titlegraphic{\hfill\includegraphics[height=0.6cm]{kattis}}
+\date{\textbf{Árangursrík forritun og lausn verkefna}}
 
 % Tikz
 \usepackage{tikz}
@@ -73,7 +29,7 @@
 
 % Minted
 \usepackage{minted}
-\usemintedstyle{monokai}
+\usemintedstyle{manni}
 \newminted{cpp}{fontsize=\footnotesize}
 
 % Graph styles
@@ -85,20 +41,18 @@
 \tikzstyle{selected edge} = [draw,line width=2pt,-,red!50]
 \tikzstyle{ignored edge} = [draw,line width=5pt,-,black!20]
 
+\tikzset{
+  treenode/.style = {align=center, inner sep=0pt, text centered,
+    font=\sffamily},
+  vertex/.style = {treenode, circle, black, font=\sffamily\bfseries\tiny, draw=black, text width=1.8em},% arbre rouge noir, noeud noir
+  rvertex/.style = {treenode, circle, black, font=\sffamily\bfseries\tiny, draw=red, text width=1.8em},% arbre rouge noir, noeud noir
+}
 
 \begin{document}
-
-% title slide
-{
-    \setbeamertemplate{footline}{} % no page number here
-    \frame{
-        \titlepage
-    }
-}
+\maketitle
 
 
 \begin{frame}{Today we're going to cover}
-    \vspace{40pt}
     \bi
         \item Problem solving paradigms
         \item Complete search
@@ -113,9 +67,7 @@
     \ei
 \end{frame}
 
-% TODO: Problem solving paradigms, what is that?
 \begin{frame}{Problem solving paradigms}
-    \vspace{40pt}
     \bi
         \item What is a problem solving paradigm?
         \item A method to construct a solution to a specific type of problem
@@ -130,16 +82,8 @@
     \ei
 \end{frame}
 
-% % todo: problem solving paradigms, overview (greedy, dp, ...)
-% \begin{frame}{Problem solving paradigms}
-%     \bi
-%         \item Complete search
-%     \ei
-% \end{frame}
-
-% todo: complete search
+\section{Complete search}
 \begin{frame}{Complete search}
-    \vspace{5pt}
     \bi
         \item We have a finite set of objects
         \item We want to find an element in that set which satisfies some constraints
@@ -155,15 +99,18 @@
     \ei
 \end{frame}
 
-\begin{frame}{Example problem: Vito's family}
+% \begin{frame}{Example problem: Vito's family}
+%     \bi
+%         \item http://uva.onlinejudge.org/external/100/10041.html
+%     \ei
+% \end{frame}
+\begin{frame}{Example problem: Closest Sums}
     \bi
-        \item http://uva.onlinejudge.org/external/100/10041.html
+        \item https://open.kattis.com/problems/closestsums
     \ei
 \end{frame}
 
-% todo: tools: next_permutation, loop through subsets with bitmask
 \begin{frame}{Complete search}
-    \vspace{20pt}
     \bi
         \item What if the search space is more complex?
             \bi
@@ -202,8 +149,6 @@ do {
 \end{frame}
 
 \begin{frame}{Iterating through permutations}
-    \vspace{40pt}
-
     \bi
         \item Even simpler in Python...
         \vspace{20pt}
@@ -238,12 +183,10 @@ for (int subset = 0; subset < (1 << n); subset++) {
 \end{frame}
 
 \begin{frame}{Iterating through subsets}
-    \vspace{40pt}
-
     \bi
         \item Similar in Python
         \vspace{20pt}
-        \item Remember that there are $2^n$ permutations of length $n$, so usually you can only go through all permutations if $n \leq 25$
+        \item Remember that there are $2^n$ subsets of $n$ elements, so usually you can only go through all subsets if $n \leq 25$
             \bi
                 \item Otherwise you need to find a more clever approach than complete search
             \ei
@@ -253,10 +196,7 @@ for (int subset = 0; subset < (1 << n); subset++) {
 
 % TODO: Example problem
 
-% TODO: Backtracking
 \begin{frame}[fragile]{Backtracking}
-    \vspace{30pt}
-
     \bi
         \item We've seen two ways to go through a complex search space, but both of the solutions were rather specific
         \item Would be nice to have a more general ``framework''
@@ -266,7 +206,6 @@ for (int subset = 0; subset < (1 << n); subset++) {
 \end{frame}
 
 \begin{frame}[fragile]{Backtracking}
-    \vspace{20pt}
     \bi
         \item Define states
             \bi
@@ -289,7 +228,6 @@ for (int subset = 0; subset < (1 << n); subset++) {
 
 
 \begin{frame}[fragile]{Backtracking}
-    \vspace{10pt}
     \bi
         \item General solution form:
     \ei
@@ -317,7 +255,6 @@ generate();
 \end{frame}
 
 
-% TODO: Generating all subsets
 \begin{frame}[fragile]{Generating all subsets}
     \bi
         \item Also simple to do with backtracking:
@@ -351,7 +288,6 @@ generate(0);
 \end{frame}
 
 
-% TODO: Generating all permutations
 \begin{frame}[fragile]{Generating all permutations}
     \bi
         \item Also simple to do with backtracking:
@@ -390,7 +326,6 @@ generate(0);
 \end{frame}
 
 \begin{frame}[fragile]{$n$ queens}
-    \vspace{20pt}
     \bi
         \item Given $n$ queens and an $n\times n$ chessboard, find all ways to
             put the $n$ queens on the chessboard such that no queen can attack
@@ -406,7 +341,6 @@ generate(0);
 \end{frame}
 
 \begin{frame}[fragile]{$n$ queens}
-    \vspace{10pt}
     \bi
         \item Go through the cells in increasing order
         \item Either put a queen on that cell or not (transition)
@@ -462,16 +396,19 @@ void generate(int x, int y) {
     \end{minted}
 \end{frame}
 
-% TODO: Example problem
-\begin{frame}{Example problem: The Hamming Distance Problem}
+% \begin{frame}{Example problem: The Hamming Distance Problem}
+%     \bi
+%         \item http://uva.onlinejudge.org/external/7/729.html
+%     \ei
+% \end{frame}
+\begin{frame}{Example problem: Lucky Numbers}
     \bi
-        \item http://uva.onlinejudge.org/external/7/729.html
+        \item https://open.kattis.com/problems/luckynumber
     \ei
 \end{frame}
 
-% TODO: Divide and conquer
+\section{Divide and conquer}
 \begin{frame}{Divide and conquer}
-    \vspace{10pt}
     \bi
         \item Given an instance of the problem, the basic idea is to
             \begin{enumerate}
@@ -537,7 +474,6 @@ void solve(int n) {
 \end{frame}
 
 \begin{frame}{Decrease and conquer}
-    \vspace{30pt}
     \bi
         \item Sometimes we're not actually dividing the problem into many subproblems, but only into one smaller subproblem
         \item Usually called decrease and conquer
@@ -546,7 +482,6 @@ void solve(int n) {
 \end{frame}
 
 \begin{frame}{Binary search}
-    \vspace{20pt}
     \bi
         \item We have a \textbf{sorted} array of elements, and we want to check if it contains a particular element $x$
         \vspace{5pt}
@@ -568,7 +503,6 @@ void solve(int n) {
 \end{frame}
 
 \begin{frame}[fragile]{Binary search}
-    \vspace{15pt}
     \begin{minted}[fontsize=\scriptsize]{cpp}
 bool binary_search(const vector<int> &arr, int lo, int hi, int x) {
     if (lo > hi) {
@@ -595,7 +529,6 @@ binary_search(arr, 0, arr.size() - 1, x);
 \end{frame}
 
 \begin{frame}[fragile]{Binary search - iterative}
-    \vspace{20pt}
     \begin{minted}[fontsize=\scriptsize]{cpp}
 bool binary_search(const vector<int> &arr, int x) {
     int lo = 0,
@@ -617,7 +550,6 @@ bool binary_search(const vector<int> &arr, int x) {
     \end{minted}
 \end{frame}
 
-% TODO: Binary search over integers
 \begin{frame}{Binary search over integers}
     \bi
         \item This might be the most well known application of binary search, but it's far from being the only application
@@ -677,7 +609,6 @@ bool p(int i) {
     \ei
 \end{frame}
 
-% TODO: Binary search over reals
 \begin{frame}[fragile]{Binary search over reals}
     \bi
         \item An even more general version of binary search is over the real numbers
@@ -746,9 +677,7 @@ bool p(double x) {
     \ei
 \end{frame}
 
-% TODO: Binary search the answer
 \begin{frame}{Binary search the answer}
-    \vspace{10pt}
     \bi
         \item It may be hard to find the optimal solution directly, as we saw in the example problem
         \item On the other hand, it may be easy to check if some $x$ is a solution or not
@@ -760,10 +689,9 @@ bool p(double x) {
     \ei
 \end{frame}
 
-% TODO: Example problem
-% TODO: Other types of divide and conquer
+% TODO: Add ternary search?
+
 \begin{frame}{Other types of divide and conquer}
-    \vspace{20pt}
     \bi
         \item Binary search is very useful, can be used to construct simple and efficient solutions to problems
         \item But binary search is only one example of divide and conquer
@@ -771,11 +699,10 @@ bool p(double x) {
     \ei
 \end{frame}
 
-% TODO: Binary exponentiation
 \begin{frame}[fragile]{Binary exponentiation}
     \bi
         \item We want to calculate $x^n$, where $x,n$ are integers
-        \item Assume we don't have the built in \texttt{pow} method
+        \item Assume we don't have the built-in \texttt{pow} method
         \item Naive method:
     \ei
 
@@ -824,8 +751,6 @@ int pow(int x, int n) {
 \end{frame}
 
 \begin{frame}[fragile]{Binary exponentiation}
-    \vspace{20pt}
-
     \bi
         \item Let's try using these identities to compute the answer recursively
     \ei
@@ -883,7 +808,6 @@ int pow(int x, int n) {
 \end{frame}
 
 \begin{frame}{Binary exponentiation}
-    \vspace{20pt}
     \bi
         \item Notice that $x$ doesn't have to be an integer, and $\star$ doesn't have to be integer multiplication...
         \item It also works for:
@@ -922,7 +846,6 @@ int pow(int x, int n) {
 \end{frame}
 
 \begin{frame}{Fibonacci words}
-    \vspace{10pt}
     \bi
         \item Let's try starting with a pair of strings, and let $+$ denote string concatenation:
             \bi
@@ -947,7 +870,6 @@ int pow(int x, int n) {
 \end{frame}
 
 \begin{frame}{Fibonacci words}
-    \vspace{5pt}
     \bi
         \item How long is $g_n$?
             \bi
@@ -976,8 +898,13 @@ int pow(int x, int n) {
     \ei
 \end{frame}
 
+\begin{frame}{Example problem: Batmanacci}
+    \bi
+        \item https://open.kattis.com/problems/batmanacci
+    \ei
+\end{frame}
+
 \begin{frame}{Fibonacci words}
-    \vspace{40pt}
     \bi
         \item Task: Compute the $i$th character in $g_{n}$
         \vspace{10pt}

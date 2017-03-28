@@ -1,75 +1,25 @@
-\documentclass[12pt,t]{beamer}
-\usepackage{graphicx}
-\setbeameroption{hide notes}
-\setbeamertemplate{note page}[plain]
-
-% get rid of junk
-\usetheme{default}
-\beamertemplatenavigationsymbolsempty
-\hypersetup{pdfpagemode=UseNone} % don't show bookmarks on initial view
-
-% font
-\usepackage{fontspec}
-\setsansfont{TeX Gyre Heros}
-\setbeamerfont{note page}{family*=pplx,size=\footnotesize} % Palatino for notes
-% "TeX Gyre Heros can be used as a replacement for Helvetica"
-% In Unix, unzip the following into ~/.fonts
-% In Mac, unzip it, double-click the .otf files, and install using "FontBook"
-%   http://www.gust.org.pl/projects/e-foundry/tex-gyre/heros/qhv2.004otf.zip
-
-% named colors
-\definecolor{offwhite}{RGB}{249,242,215}
-\definecolor{foreground}{RGB}{255,255,255}
-\definecolor{background}{RGB}{24,24,24}
-\definecolor{title}{RGB}{107,174,214}
-\definecolor{gray}{RGB}{155,155,155}
-\definecolor{subtitle}{RGB}{102,255,204}
-\definecolor{hilight}{RGB}{102,255,204}
-\definecolor{vhilight}{RGB}{255,111,207}
-\definecolor{lolight}{RGB}{155,155,155}
-%\definecolor{green}{RGB}{125,250,125}
-
-% use those colors
-\setbeamercolor{titlelike}{fg=title}
-\setbeamercolor{subtitle}{fg=subtitle}
-\setbeamercolor{institute}{fg=gray}
-\setbeamercolor{normal text}{fg=foreground,bg=background}
-\setbeamercolor{item}{fg=foreground} % color of bullets
-\setbeamercolor{subitem}{fg=gray}
-\setbeamercolor{itemize/enumerate subbody}{fg=gray}
-\setbeamertemplate{itemize subitem}{{\textendash}}
-\setbeamerfont{itemize/enumerate subbody}{size=\footnotesize}
-\setbeamerfont{itemize/enumerate subitem}{size=\footnotesize}
-
-% page number
-\setbeamertemplate{footline}{%
-    \raisebox{5pt}{\makebox[\paperwidth]{\hfill\makebox[20pt]{\color{gray}
-          \scriptsize\insertframenumber}}}\hspace*{5pt}}
-
-% add a bit of space at the top of the notes page
-\addtobeamertemplate{note page}{\setlength{\parskip}{12pt}}
-
+\documentclass[10pt]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usetheme{metropolis}
+\usepackage{booktabs}
+\usepackage[scale=2]{ccicons}
+\usepackage{pgfplots}
+\usepgfplotslibrary{dateplot}
+\usepackage{xspace}
 \usepackage{pbox}
 
 % a few macros
 \newcommand{\bi}{\begin{itemize}}
 \newcommand{\ei}{\end{itemize}}
 \newcommand{\ig}{\includegraphics}
-\newcommand{\subt}[1]{{\footnotesize \color{subtitle} {#1}}}
 
 % title info
 \title{Introduction}
-% \subtitle{Theory, Representation, and Algorithms}
 \author{Bjarki Ágúst Guðmundsson\\ Tómas Ken Magnússon}
 \institute{\href{http://ru.is/td}{School of Computer Science} \\[2pt] \href{http://ru.is}{Reykjavík University}}
-\date{Árangursrík forritun og lausn verkefna}
-% \date{\href{http://www.biostat.wisc.edu/~kbroman}{\tt \scriptsize biostat.wisc.edu/{\textasciitilde}kbroman}
-% \\[-4pt]
-% \href{http://github.com/kbroman}{\tt \scriptsize github.com/kbroman}
-% }
-
-\newcommand{\specialcell}[2][c]{%
-  \begin{tabular}[#1]{@{}c@{}}#2\end{tabular}}
+\titlegraphic{\hfill\includegraphics[height=0.6cm]{kattis}}
+\date{\textbf{Árangursrík forritun og lausn verkefna}}
 
 % Tikz
 \usepackage{tikz}
@@ -77,7 +27,7 @@
 
 % Minted
 \usepackage{minted}
-\usemintedstyle{monokai}
+\usemintedstyle{manni}
 \newminted{cpp}{fontsize=\footnotesize}
 
 % Graph styles
@@ -91,40 +41,20 @@
 
 
 \begin{document}
+\maketitle
 
-% title slide
-{
-    \setbeamertemplate{footline}{} % no page number here
-    \frame{
-        \titlepage
-    }
-}
-
-
-% TODO: Welcome
 \begin{frame}{Welcome}
-
-    \vspace{40pt}
-
     \bi
         \item T-414-AFLV, Árangursrík forritun og lausn verkefna
 
         \vspace{10pt}
 
-        \item Bjarki Ágúst Guðmundsson, {\color{vhilight}bjarkig12@ru.is}
-        \item Tómas Ken Magnússon, {\color{vhilight}tomasm12@ru.is}
-
-        \vspace{10pt}
-
-        \item Magnús Már Halldórsson filling in today
+        \item Bjarki Ágúst Guðmundsson, {\alert{bjarkig12@ru.is}}
+        \item Tómas Ken Magnússon, {\alert{tomasm12@ru.is}}
     \ei
 \end{frame}
 
-% TODO: Goals
 \begin{frame}{Goal}
-
-    \vspace{30pt}
-
     \bi
         \item Given a problem, we want to
             \bi
@@ -141,10 +71,7 @@
     \ei
 \end{frame}
 
-% TODO: About the course
 \begin{frame}{How?}
-    \vspace{10pt}
-
     \bi
         \item Study common types of problems
         \item Show common applications of algorithms and data structures you already know from
@@ -161,71 +88,62 @@
     \ei
 \end{frame}
 
-% TODO: Book
 \begin{frame}{Course book}
-    \vspace{20pt}
-
     \bi
-        \item {\color{hilight}Competitive Programming} by Steven Halim
+        \item \alert{Competitive Programming} by Steven Halim
         \item First edition can be downloaded from the book homepage:
-        \item {\color{vhilight}https://sites.google.com/site/stevenhalim/}
+        \item \textbf{https://sites.google.com/site/stevenhalim/}
         \vspace{10pt}
         \item We will loosely follow the first edition
         \item There's also a 2nd and 3rd edition (both should be compatible with our course), but they need to be ordered online
     \ei
 \end{frame}
 
-% TODO: Piazza
 \begin{frame}{Piazza}
     \bi
-        \vspace{40pt}
         \item Piazza can be used to ask questions
-        \item https://piazza.com/ru.is/fall2014/t414aflv/home
+        \item \textbf{https://piazza.com/class/in9iwmhczfd1dv}
     \ei
 \end{frame}
 
-% TODO: Overview
 \begin{frame}{Course schedule}
-    \bi
-        \item Preliminary course schedule
-    \ei
-
-    {
-        \tiny
-
-        \begin{center}
-            \begin{tabular}{cl|ll}
-                Class no. & Date & Topics & Activities \\
-                \hline
-                1 & 01.12 & Introduction & \\
-                2 & 02.12 & Data structures and libraries & \\
-                3 & 03.12 & Data structures & \\
-                4 & 04.12 & Problem solving paradigms & \\
-                5 & 05.12 &\pbox{20cm}{\vspace{2pt}Greedy algorithms\\Dynamic programming} & Problem session I \\
-                  & 06.12 & & \\
-                  & 07.12 & & Hand in problem sets from week 1 \\
-                6 & 08.12 & Dynamic programming & \\
-                7 & 09.12 & Unweighted graphs & \\
-                8 & 10.12 & Graphs & \\
-                9 & 11.12 & Network flow & \\
-                10 & 12.12 & Mathematics & Problem session II \\
-                   & 13.12 & & \\
-                   & 14.12 & & Hand in problem sets from week 2 \\
-                11 & 15.12 & Strings & \\
-                12 & 16.12 & Geometry & \\
-                13 & 17.12 & & Final exam \\
-                   & 18.12 & & \\
-                   & 19.12 & & \pbox{20cm}{Hand in problem sets from week 3\\Hand in bonus problems}  \\
-            \end{tabular}
-        \end{center}
-    }
-
+    \scriptsize
+    \begin{center}
+        \begin{tabular}{cl|ll}
+            Class no. & Date & Topics & Activities \\
+            \hline
+            1 & 25.04 & Introduction & \\
+            2 & 26.04 & Data structures and libraries & \\
+            3 & 27.04 & Data structures & \\
+            4 & 28.04 & Problem solving paradigms & \\
+            5 & 29.04 & Greedy algorithms & Problem session I \\
+            \hline
+              & 30.04 & & \\
+              & 01.05 & & Problem sets week 1 \\
+            \hline
+            6 & 02.05 & Dynamic programming & \\
+            7 & 03.05 & Unweighted graphs & \\
+            8 & 04.05 & Graphs & \\
+            9 & 05.05 & Network flow & \\
+            10 & 06.05 & & Problem session II \\
+            \hline
+              & 07.05 & & \\
+              & 08.05 & & Problem sets week 2 \\
+            \hline
+            11 & 09.05 & Mathematics & \\
+            12 & 10.05 & Strings & \\
+            13 & 11.05 & Geometry & \\
+            14 & 12.05 &  & \\
+            15 & 13.05 & & Final exam \\
+            \hline
+              & 14.05 & & \\
+              & 15.05 & & Problem sets week 3, Bonus problems \\
+            \hline
+        \end{tabular}
+    \end{center}
 \end{frame}
 
-% TODO: Problem sets
 \begin{frame}{Problem sets}
-
-    \vspace{30pt}
     \bi
         \item Each class covers a topic
         \item A talk about the topic before noon
@@ -241,9 +159,6 @@
 
 \begin{frame}{Problem sets}
     \bi
-
-        \vspace{10pt}
-
         \item Each problem set has 5 problems
         \item Each problem is assigned some amount of points
         \item To get a perfect score you need to get at least a certain amount of points
@@ -260,10 +175,8 @@
     \ei
 \end{frame}
 
-% TODO: bonus problems, late handins, and partially solving problems
 \begin{frame}{Bonus problems}
     \bi
-        \vspace{40pt}
         \item Each problem set contains two challenging bonus problems
         \item Deadline for all bonus problems is the same as the deadline for the last problem set
         \item Bonus problems are only taken into account if the student would pass the course before they're taken into account
@@ -271,7 +184,6 @@
 \end{frame}
 
 \begin{frame}{Late handins, partial grading}
-    \vspace{40pt}
     \bi
         \item Late handins will not be accepted
             \bi
@@ -281,10 +193,8 @@
     \ei
 \end{frame}
 
-% TODO: Contests
 \begin{frame}{Problem sessions}
     \bi
-        \vspace{40pt}
         \item On each Friday is a programming contest
         \item Problems will be related to topics covered so far
         \item Teams of up to three people compete together
@@ -292,22 +202,16 @@
     \ei
 \end{frame}
 
-% TODO: Exam
 \begin{frame}{Final exam}
     \bi
-        \vspace{50pt}
         \item Will be held on the last Friday
         \item Similar to a problem set from all the topics
-        \item Will be very fair
+        \vspace{10pt}
+        \item Need to pass the exam to pass the course
     \ei
 \end{frame}
 
-% TODO: Course evaluation
 \begin{frame}{Course evaluation}
-    % TODO: Figure out what the course evaluation looks like, and assign weights to problem sets/contests/exam
-
-    \vspace{20pt}
-
     \begin{center}
     \begin{tabular}{lr}
         Problem sets & $70\%$ \\
@@ -327,21 +231,7 @@
 \end{frame}
 
 
-{
-    \setbeamertemplate{footline}{} % no page number here
-    \frame{
-        \vspace{50pt}
-        \begin{center}
-            {\large\color{title}Let's get started}
-        \end{center}
-        \vspace{20pt}
-        \begin{center}
-            {\huge\color{title}Introduction}
-        \end{center}
-    }
-}
-
-% TODO: What kind of problems we're dealing with: description/input/output
+\section{Introduction}
 \begin{frame}{The problems}
     \bi
         \item Typical programming contest problems
@@ -359,29 +249,28 @@
     \ei
 \end{frame}
 
-% TODO: Example problems/solutions
 \begin{frame}{Example problem}
-    \vspace{10pt}
-    {\footnotesize\color{title}Problem description}\\
+    \begin{block}{Problem description}
     Write a program that multiplies pairs of integers.
+    \end{block}
 
     \vspace{10pt}
 
-    {\footnotesize\color{title}Input description}\\
+    \begin{block}{Input description}
     Input starts with one line containing an integer $T$, where $1\leq T \leq
     100$, denoting the number of test cases. Then $T$ lines follow, each
     containing a test case. Each test case consists of two integers $A,B$,
     where $-2^{20} \leq A,B \leq 2^{20}$, separated by a single space.
+    \end{block}
 
     \vspace{10pt}
 
-    {\footnotesize\color{title}Output description}\\
+    \begin{block}{Output description}
     For each test case, output one line containing the value of $A\times B$.
+    \end{block}
 \end{frame}
 
 \begin{frame}{Example problem}
-    \vspace{10pt}
-
     \begin{center}
         \begin{tabular}{|l|l|}
             \hline
@@ -434,13 +323,12 @@ int main() {
 \end{minted}
 
     \bi
-        \onslide<2->{\item Is this solution correct? \onslide<5->{{\color{vhilight}No!}}}
+        \onslide<2->{\item Is this solution correct? \onslide<5->{\alert{No!}}}
         \onslide<3->{\item What if $A = B = 2^{20}$? \onslide<4->{The output is $0$...}}
     \ei
 \end{frame}
 
 \begin{frame}[fragile]{Example solution}
-    \vspace{40pt}
     \bi
         \item When $A = B = 2^{20}$, the answer should be $2^{40}$
         \onslide<2->{\item Too big to fit in a 32-bit integer, so it overflows}
@@ -470,16 +358,15 @@ int main() {
 \end{minted}
 
     \bi
-    \onslide<2->{\item Is this solution correct? \onslide<3->{{\color{vhilight}Yes!}}}
+    \onslide<2->{\item Is this solution correct? \onslide<3->{{\alert{Yes!}}}}
     \ei
 \end{frame}
 
 
-% TODO: Judge system, verdicts, Kattis
 \begin{frame}{Automatic judging}
     \bi
-        \item The problems will be available on {\color{hilight}Kattis}:
-        \item https://ru.kattis.com/
+        \item The problems will be available on \alert{Kattis}:
+        \item \textbf{https://ru.kattis.com/}
         \vspace{20pt}
         \item Kattis is an online judge, similar to Mooshak
         \item You will submit your solutions to Kattis, and get immediate feedback about the solution
@@ -509,11 +396,10 @@ int main() {
                 \item Memory Limit Exceeded
             \ei
 
-        \item We will not reveal which test cases Kattis runs on your solution
+        \item We will not reveal which test cases Kattis uses to test your solution
     \ei
 \end{frame}
 
-% TODO: Guidelines
 \begin{frame}{Tips}
     \bi
         \item There are a couple of tips and guidelines you can keep in mind towards becoming a more effective programmer and better problem solver
@@ -528,7 +414,7 @@ int main() {
         \item Good problem solvers have simple solutions; they don't have to type as much, but it's still important to type in quickly
         \vspace{20pt}
         \item TypeRacer is a fun and effective way to practice:
-        \item http://play.typeracer.com/
+        \item \textbf{http://play.typeracer.com/}
     \ei
 \end{frame}
 
@@ -572,20 +458,20 @@ int main() {
         \item We also want our solution to be as simple as possible
         \vspace{5pt}
         \item We can use Algorithm Analysis to determine if a solution will run within the time limit
-        \item Rule of thumb: $10^{9}$ operations per second
+        \item Rule of thumb: $10^{8}$ operations per second
         \vspace{10pt}
-        \item We want to sort $n \leq 10^{6}$ integers, and we have 3 seconds.
+        \item<2-> We want to sort $n \leq 10^{6}$ integers, and we have 3 seconds.
             \bi
                 \item Can we use a simple $O(n^2)$ bubble sort?
                 \item What about a more complex $O(n\log n)$ merge sort?
             \ei
         \vspace{5pt}
-        \item We want to sort $n \leq 10^{3}$ integers, and we have 3 seconds.
+        \item<3-> We want to sort $n \leq 10^{3}$ integers, and we have 3 seconds.
             \bi
                 \item Can we now use the simple $O(n^2)$ bubble sort?
             \ei
         \vspace{5pt}
-        \item Always go for the simplest solution that will pass the time limit
+        \item<4-> Always go for the simplest solution that will pass the time limit
     \ei
 \end{frame}
 
@@ -602,11 +488,9 @@ int main() {
 \end{frame}
 
 \begin{frame}{Tip 2: Do Algorithm Analysis}
-
-\vspace{50pt}
-
+    \vspace{10pt}
 {
-    \tiny
+    \scriptsize
     \begin{center}
     \begin{tabular}{c|c|c}
         $n$ & Slowest Accepted Algorithm & Example \\
@@ -614,7 +498,7 @@ int main() {
         $\leq 10$ & $O(n!), O(n^6)$ & Enumerating a permutation \\
         $\leq 15$ & $O(2^n\times n^2)$ & DP TSP \\
         $\leq 20$ & $O(2^n), O(n^5)$ & DP + bitmask technique \\
-        $\leq 50$ & $O(n^4)$ & DP with 3 dimensions + $O(n)$ loop, choosing  $_nC_k=4$ \\
+        $\leq 50$ & $O(n^4)$ & DP with 3 dimensions + $O(n)$ loop, choosing  $_nC_4$ \\
         $\leq 10^2$ & $O(n^3)$ & Floyd Warshall's \\
         $\leq 10^3$ & $O(n^2)$ & Bubble/Selection/Insertion sort \\
         $\leq 10^5$ & $O(n\log_2{n})$ & Merge sort, building a Segment tree \\
@@ -622,12 +506,9 @@ int main() {
     \end{tabular}
     \end{center}
 }
-
 \end{frame}
 
 \begin{frame}{Tip 3: Master Programming Languages}
-    \vspace{40pt}
-
     \bi
         \item You should know your programming language like the back of your hand
         \item This includes your programming language's library
@@ -640,7 +521,6 @@ int main() {
 \end{frame}
 
 \begin{frame}{Tip 4: Test your solution}
-    \vspace{30pt}
     \bi
         \item You want to make sure your solution is correct and runs within the time limit
         \item Or you already know it's wrong, but don't know why
@@ -651,28 +531,18 @@ int main() {
 \end{frame}
 
 \begin{frame}{Tip 5: Practice and more practice}
-    \vspace{30pt}
     \bi
         \item Problem solving and programming skills come with practice
         \item Lots of online judges that let you solve problems from past contests
         \item Some of these online judges also hold contests frequently
-        \item UVa, Codeforces, TopCoder, Kattis, ...
+        \item Open Kattis, Codeforces, HackerRank, Codechef, UVa, TopCoder, ...
     \ei
 \end{frame}
 
 
-{
-    \setbeamertemplate{footline}{} % no page number here
-    \frame{
-        \vspace{60pt}
-        \begin{center}
-            {\huge\color{title}Ad Hoc problems}
-        \end{center}
-    }
-}
+\section{Ad Hoc Problems}
 
 \begin{frame}{Ad Hoc problems}
-    \vspace{30pt}
     \bi
         \item The simplest kind of problem
         \item Just do what the problem description tells you
@@ -685,10 +555,9 @@ int main() {
 \end{frame}
 
 \begin{frame}{Problem: Cost Cutting}
-
+    \vspace{10pt}
 {
     \small
-    \vspace{20pt}
 Company XYZ have been badly hit by recession and is taking a lot of cost cutting measures. Some of these measures include giving up office space, going open source, reducing incentives, cutting on luxuries and issuing pink slips.
 
 \vspace{10pt}
@@ -696,30 +565,24 @@ Company XYZ have been badly hit by recession and is taking a lot of cost cutting
 They have got three (3) employees working in the accounts department and are going to lay-off two (2) of them. After a series of meetings, they have decided to dislodge the person who gets the most salary and the one who gets the least. This is usually the general trend during crisis like this.
 You will be given the salaries of these 3 employees working in the accounts department. You have to find out the salary of the person who survives.
 }
-
 \end{frame}
 
 \begin{frame}{Problem: Cost Cutting}
-
-    \vspace{20pt}
-    {\footnotesize\color{title}Input}
-
+    \begin{block}{Input}
     {\small
        The first line of input is an integer $T$ ($T<20$) that indicates the number of test cases. Each case consists of a line with 3 distinct positive integers. These 3 integers represent the salaries of the three employees. All these integers will be in the range $[1000, 10000]$.
     }
+    \end{block}
 
-
-    \vspace{30pt}
-    {\footnotesize\color{title}Output}
-
+    \vspace{20pt}
+    \begin{block}{Output}
     {\small
     For each case, output the case number followed by the salary of the person who survives.
     }
+    \end{block}
 \end{frame}
 
 \begin{frame}{Problem: Cost Cutting}
-    \vspace{10pt}
-
     \begin{center}
         \begin{tabular}{|l|l|}
             \hline
@@ -777,8 +640,6 @@ int main() {
 
 \begin{frame}{Problem: SMS Typing}
 
-\vspace{20pt}
-
 {\small
    Cell phones have become an essential part of modern life. In addition to
 making voice calls, cell phones can be used to send text messages, which
@@ -795,8 +656,6 @@ pressed to type a particular message.
 
 
 \begin{frame}{Problem: SMS Typing}
-
-\vspace{10pt}
 
 {
     \small
@@ -825,27 +684,25 @@ also applicable for the remaining keys and letters. Note that it takes a single 
 \end{frame}
 
 \begin{frame}{Problem: SMS Typing}
-
-    \vspace{20pt}
-    {\footnotesize\color{title} Input}\\
+    \begin{block}{Input}
     {\small
 The first line of input will be a positive integer $T$ where $T$ denotes the number of test cases. $T$ lines
 will then follow each containing only spaces and lower case letters. Each line will contain at least 1 and
 at most 100 characters.
     }
+    \end{block}
 
     \vspace{20pt}
-    {\footnotesize\color{title} Output}\\
+    \begin{block}{Output}
     {\small
 For every case of input there will be one line of output. It will first contain the case number followed
 by the number of key presses required to type the message of that case. Look at the sample output for
 exact formatting.
     }
+    \end{block}
 \end{frame}
 
 \begin{frame}{Problem: SMS Typing}
-    \vspace{10pt}
-
     \begin{center}
         \begin{tabular}{|l|l|}
             \hline
@@ -926,8 +783,6 @@ int main() {
 \end{frame}
 
 \begin{frame}{Problem set 1}
-    \vspace{40pt}
-
     \bi
         \item The first problem set is already online
         \item Deadline is next Sunday
@@ -936,4 +791,3 @@ int main() {
 \end{frame}
 
 \end{document}
-

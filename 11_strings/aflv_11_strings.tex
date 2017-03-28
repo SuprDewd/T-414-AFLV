@@ -1,72 +1,133 @@
-\documentclass[12pt,t]{beamer}
-\usepackage{graphicx}
-\setbeameroption{hide notes}
-\setbeamertemplate{note page}[plain]
-
-% get rid of junk
-\usetheme{default}
-\beamertemplatenavigationsymbolsempty
-\hypersetup{pdfpagemode=UseNone} % don't show bookmarks on initial view
-
-% font
-\usepackage{fontspec}
-\setsansfont{TeX Gyre Heros}
-\setbeamerfont{note page}{family*=pplx,size=\footnotesize} % Palatino for notes
-% "TeX Gyre Heros can be used as a replacement for Helvetica"
-% In Unix, unzip the following into ~/.fonts
-% In Mac, unzip it, double-click the .otf files, and install using "FontBook"
-%   http://www.gust.org.pl/projects/e-foundry/tex-gyre/heros/qhv2.004otf.zip
-
-% named colors
-\definecolor{offwhite}{RGB}{249,242,215}
-\definecolor{foreground}{RGB}{255,255,255}
-\definecolor{background}{RGB}{24,24,24}
-\definecolor{title}{RGB}{107,174,214}
-\definecolor{gray}{RGB}{155,155,155}
-\definecolor{subtitle}{RGB}{102,255,204}
-\definecolor{hilight}{RGB}{102,255,204}
-\definecolor{vhilight}{RGB}{255,111,207}
-\definecolor{lolight}{RGB}{155,155,155}
-%\definecolor{green}{RGB}{125,250,125}
-
-% use those colors
-\setbeamercolor{titlelike}{fg=title}
-\setbeamercolor{subtitle}{fg=subtitle}
-\setbeamercolor{institute}{fg=gray}
-\setbeamercolor{normal text}{fg=foreground,bg=background}
-\setbeamercolor{item}{fg=foreground} % color of bullets
-\setbeamercolor{subitem}{fg=gray}
-\setbeamercolor{itemize/enumerate subbody}{fg=gray}
-\setbeamertemplate{itemize subitem}{{\textendash}}
-\setbeamerfont{itemize/enumerate subbody}{size=\footnotesize}
-\setbeamerfont{itemize/enumerate subitem}{size=\footnotesize}
-
-% page number
-\setbeamertemplate{footline}{%
-    \raisebox{5pt}{\makebox[\paperwidth]{\hfill\makebox[20pt]{\color{gray}
-          \scriptsize\insertframenumber}}}\hspace*{5pt}}
-
-% add a bit of space at the top of the notes page
-\addtobeamertemplate{note page}{\setlength{\parskip}{12pt}}
+% \documentclass[12pt,t]{beamer}
+% \usepackage{graphicx}
+% \setbeameroption{hide notes}
+% \setbeamertemplate{note page}[plain]
+%
+% % get rid of junk
+% \usetheme{default}
+% \beamertemplatenavigationsymbolsempty
+% \hypersetup{pdfpagemode=UseNone} % don't show bookmarks on initial view
+%
+% % font
+% \usepackage{fontspec}
+% \setsansfont{TeX Gyre Heros}
+% \setbeamerfont{note page}{family*=pplx,size=\footnotesize} % Palatino for notes
+% % "TeX Gyre Heros can be used as a replacement for Helvetica"
+% % In Unix, unzip the following into ~/.fonts
+% % In Mac, unzip it, double-click the .otf files, and install using "FontBook"
+% %   http://www.gust.org.pl/projects/e-foundry/tex-gyre/heros/qhv2.004otf.zip
+%
+% % named colors
+% \definecolor{offwhite}{RGB}{249,242,215}
+% \definecolor{foreground}{RGB}{255,255,255}
+% \definecolor{background}{RGB}{24,24,24}
+% \definecolor{title}{RGB}{107,174,214}
+% \definecolor{gray}{RGB}{155,155,155}
+% \definecolor{subtitle}{RGB}{102,255,204}
+% \definecolor{hilight}{RGB}{102,255,204}
+% \definecolor{vhilight}{RGB}{255,111,207}
+% \definecolor{lolight}{RGB}{155,155,155}
+% %\definecolor{green}{RGB}{125,250,125}
+%
+% % use those colors
+% \setbeamercolor{titlelike}{fg=title}
+% \setbeamercolor{subtitle}{fg=subtitle}
+% \setbeamercolor{institute}{fg=gray}
+% \setbeamercolor{normal text}{fg=foreground,bg=background}
+% \setbeamercolor{item}{fg=foreground} % color of bullets
+% \setbeamercolor{subitem}{fg=gray}
+% \setbeamercolor{itemize/enumerate subbody}{fg=gray}
+% \setbeamertemplate{itemize subitem}{{\textendash}}
+% \setbeamerfont{itemize/enumerate subbody}{size=\footnotesize}
+% \setbeamerfont{itemize/enumerate subitem}{size=\footnotesize}
+%
+% % page number
+% \setbeamertemplate{footline}{%
+%     \raisebox{5pt}{\makebox[\paperwidth]{\hfill\makebox[20pt]{\color{gray}
+%           \scriptsize\insertframenumber}}}\hspace*{5pt}}
+%
+% % add a bit of space at the top of the notes page
+% \addtobeamertemplate{note page}{\setlength{\parskip}{12pt}}
+%
+% % a few macros
+% \newcommand{\bi}{\begin{itemize}}
+% \newcommand{\ei}{\end{itemize}}
+% \newcommand{\ig}{\includegraphics}
+% \newcommand{\subt}[1]{{\footnotesize \color{subtitle} {#1}}}
+%
+%
+% % title info
+% \title{Strings}
+% % \subtitle{Part 2}
+% \author{Bjarki Ágúst Guðmundsson \\ Tómas Ken Magnússon}
+% \institute{\href{http://ru.is/td}{School of Computer Science} \\[2pt] \href{http://ru.is}{Reykjavík University}}
+% \date{Árangursrík forritun og lausn verkefna}
+% % \date{\href{http://www.biostat.wisc.edu/~kbroman}{\tt \scriptsize biostat.wisc.edu/{\textasciitilde}kbroman}
+% % \\[-4pt]
+% % \href{http://github.com/kbroman}{\tt \scriptsize github.com/kbroman}
+% % }
+%
+%
+% % Tikz
+% \usepackage{tikz}
+% \usetikzlibrary{arrows,shapes}
+% \usepackage{forest}
+%
+% % Minted
+% \usepackage{minted}
+% \usemintedstyle{monokai}
+% \newminted{cpp}{fontsize=\footnotesize}
+%
+% % Graph styles
+% \tikzstyle{vertex}=[circle,fill=black!50,minimum size=15pt,inner sep=0pt, font=\small]
+% \tikzstyle{selected vertex} = [vertex, fill=vhilight]
+% \tikzstyle{selected2 vertex} = [vertex, fill=hilight!50, text=black]
+% \tikzstyle{vertex1} = [vertex, fill=red]
+% \tikzstyle{vertex2} = [vertex, fill=blue]
+% \tikzstyle{vertex3} = [vertex, fill=green, text=black]
+% \tikzstyle{vertex4} = [vertex, fill=yellow, text=black]
+% \tikzstyle{vertex5} = [vertex, fill=pink, text=black]
+% \tikzstyle{vertex6} = [vertex, fill=purple]
+% \tikzstyle{edge} = [draw,thick,-]
+% \tikzstyle{dedge} = [draw,thick,->]
+% \tikzstyle{weight} = [font=\scriptsize,pos=0.5]
+% \tikzstyle{selected edge} = [draw,line width=2pt,-,red!50]
+% \tikzstyle{ignored edge} = [draw,line width=5pt,-,black!20]
+%
+%
+% \begin{document}
+%
+% % title slide
+% {
+%     \setbeamertemplate{footline}{} % no page number here
+%     \frame{
+%         \titlepage
+%     }
+% }
+\documentclass[10pt]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usetheme{metropolis}
+\usepackage{booktabs}
+\usepackage[scale=2]{ccicons}
+\usepackage{pgfplots}
+\usepgfplotslibrary{dateplot}
+\usepackage{xspace}
+\usepackage{pbox}
 
 % a few macros
 \newcommand{\bi}{\begin{itemize}}
 \newcommand{\ei}{\end{itemize}}
 \newcommand{\ig}{\includegraphics}
-\newcommand{\subt}[1]{{\footnotesize \color{subtitle} {#1}}}
-
+\definecolor{hilight}{RGB}{235,129,27}
+\definecolor{vhilight}{RGB}{235,129,27}
 
 % title info
 \title{Strings}
-% \subtitle{Part 2}
-\author{Bjarki Ágúst Guðmundsson \\ Tómas Ken Magnússon}
+\author{Bjarki Ágúst Guðmundsson\\ Tómas Ken Magnússon}
 \institute{\href{http://ru.is/td}{School of Computer Science} \\[2pt] \href{http://ru.is}{Reykjavík University}}
-\date{Árangursrík forritun og lausn verkefna}
-% \date{\href{http://www.biostat.wisc.edu/~kbroman}{\tt \scriptsize biostat.wisc.edu/{\textasciitilde}kbroman}
-% \\[-4pt]
-% \href{http://github.com/kbroman}{\tt \scriptsize github.com/kbroman}
-% }
-
+\titlegraphic{\hfill\includegraphics[height=0.6cm]{kattis}}
+\date{\textbf{Árangursrík forritun og lausn verkefna}}
 
 % Tikz
 \usepackage{tikz}
@@ -75,39 +136,36 @@
 
 % Minted
 \usepackage{minted}
-\usemintedstyle{monokai}
+\usemintedstyle{manni}
 \newminted{cpp}{fontsize=\footnotesize}
 
 % Graph styles
 \tikzstyle{vertex}=[circle,fill=black!50,minimum size=15pt,inner sep=0pt, font=\small]
-\tikzstyle{selected vertex} = [vertex, fill=vhilight]
+\tikzstyle{selected vertex} = [vertex, fill=red!24]
+\tikzstyle{edge} = [draw,thick,-]
+\tikzstyle{dedge} = [draw,thick,->]
+\tikzstyle{weight} = [font=\scriptsize,pos=0.5]
+\tikzstyle{selected edge} = [draw,line width=2pt,-,red!50]
 \tikzstyle{selected2 vertex} = [vertex, fill=hilight!50, text=black]
+\tikzstyle{ignored edge} = [draw,line width=5pt,-,black!20]
 \tikzstyle{vertex1} = [vertex, fill=red]
 \tikzstyle{vertex2} = [vertex, fill=blue]
 \tikzstyle{vertex3} = [vertex, fill=green, text=black]
 \tikzstyle{vertex4} = [vertex, fill=yellow, text=black]
 \tikzstyle{vertex5} = [vertex, fill=pink, text=black]
 \tikzstyle{vertex6} = [vertex, fill=purple]
-\tikzstyle{edge} = [draw,thick,-]
-\tikzstyle{dedge} = [draw,thick,->]
-\tikzstyle{weight} = [font=\scriptsize,pos=0.5]
-\tikzstyle{selected edge} = [draw,line width=2pt,-,red!50]
-\tikzstyle{ignored edge} = [draw,line width=5pt,-,black!20]
 
-
-\begin{document}
-
-% title slide
-{
-    \setbeamertemplate{footline}{} % no page number here
-    \frame{
-        \titlepage
-    }
+\tikzset{
+  treenode/.style = {align=center, inner sep=0pt, text centered,
+    font=\sffamily},
+  vertex/.style = {treenode, circle, black, font=\sffamily\bfseries\tiny, draw=black, text width=1.8em},% arbre rouge noir, noeud noir
+  rvertex/.style = {treenode, circle, black, font=\sffamily\bfseries\tiny, draw=red, text width=1.8em},% arbre rouge noir, noeud noir
 }
 
+\begin{document}
+\maketitle
 
 \begin{frame}{Today we're going to cover}
-    \vspace{40pt}
     \bi
         \item String matching
             \bi
@@ -122,7 +180,6 @@
 \end{frame}
 
 \begin{frame}{String problems}
-    \vspace{10pt}
     \bi
         \item Strings frequently appear in our kind of problems
             \bi
@@ -145,11 +202,7 @@
     \ei
 \end{frame}
 
-% TODO: String matching (definition)
-
 \begin{frame}{String matching}
-    \vspace{30pt}
-
 	\begin{itemize}
 		\item Given a string $S$ of length $n$,
 		\item and a string $T$ of length $m$,
@@ -166,7 +219,6 @@
 \end{frame}
 
 \begin{frame}{String matching}
-    \vspace{30pt}
 	Example:
 	\begin{itemize}
 		\item $S = \mathrm{cabcababacaba}$
@@ -182,11 +234,7 @@
     \end{itemize}
 \end{frame}
 
-
-% TODO: Naive string matching algorithm
-
 \begin{frame}{Naive string matching algorithm}
-    \vspace{30pt}
 	\begin{itemize}
 	\item For each substring of length $m$ in $S$,
 	\item check if that substring is equal to $T$.
@@ -196,63 +244,54 @@
 
 
 \begin{frame}{Naive string matching algorithm}
-    \vspace{30pt}
     \begin{itemize}
         \item $S$: \texttt{\textcolor{red}{b}acbababaabcbab}
         \item $T$: \phantom{\texttt{}}\texttt{\textcolor{red}{a}babaca}
     \end{itemize}
 \end{frame}
 \begin{frame}{Naive string matching algorithm}
-    \vspace{30pt}
     \begin{itemize}
         \item $S$: \texttt{b\textcolor{green}{a}\textcolor{red}{c}bababaabcbab}
         \item $T$: \phantom{\texttt{a}}\texttt{\textcolor{green}{a}\textcolor{red}{b}abaca}
     \end{itemize}
 \end{frame}
 \begin{frame}{Naive string matching algorithm}
-    \vspace{30pt}
     \begin{itemize}
         \item $S$: \texttt{ba\textcolor{red}{c}bababaabcbab}
         \item $T$: \phantom{\texttt{aa}}\texttt{\textcolor{red}{a}babaca}
     \end{itemize}
 \end{frame}
 \begin{frame}{Naive string matching algorithm}
-    \vspace{30pt}
     \begin{itemize}
         \item $S$: \texttt{bac\textcolor{red}{b}ababaabcbab}
         \item $T$: \phantom{\texttt{aaa}}\texttt{\textcolor{red}{a}babaca}
     \end{itemize}
 \end{frame}
 \begin{frame}{Naive string matching algorithm}
-    \vspace{30pt}
     \begin{itemize}
         \item $S$: \texttt{bacb\textcolor{green}{ababa}\textcolor{red}{a}bcbab}
         \item $T$: \phantom{\texttt{aaaa}}\texttt{\textcolor{green}{ababa}\textcolor{red}{c}a}
     \end{itemize}
 \end{frame}
 \begin{frame}{Naive string matching algorithm}
-    \vspace{30pt}
     \begin{itemize}
         \item $S$: \texttt{bacba\textcolor{red}{b}abaabcbab}
         \item $T$: \phantom{\texttt{aaaaa}}\texttt{\textcolor{red}{a}babaca}
     \end{itemize}
 \end{frame}
 \begin{frame}{Naive string matching algorithm}
-    \vspace{30pt}
     \begin{itemize}
         \item $S$: \texttt{bacbab\textcolor{green}{aba}\textcolor{red}{a}bcbab}
         \item $T$: \phantom{\texttt{aaaaaa}}\texttt{\textcolor{green}{aba}\textcolor{red}{b}aca}
     \end{itemize}
 \end{frame}
 \begin{frame}{Naive string matching algorithm}
-    \vspace{30pt}
     \begin{itemize}
         \item $S$: \texttt{bacbaba\textcolor{red}{b}aabcbab}
         \item $T$: \phantom{\texttt{aaaaaaa}}\texttt{\textcolor{red}{a}babaca}
     \end{itemize}
 \end{frame}
 \begin{frame}{Naive string matching algorithm}
-    \vspace{30pt}
     \begin{itemize}
         \item $S$: \texttt{bacbabab\textcolor{green}{a}\textcolor{red}{a}bcbab}
         \item $T$: \phantom{\texttt{aaaaaaaa}}\texttt{\textcolor{green}{a}\textcolor{red}{b}abaca}
@@ -285,7 +324,6 @@ int string_match(const string &s, const string &t) {
 \end{frame}
 
 \begin{frame}{Naive string matching algorithm}
-    \vspace{30pt}
     \bi
         \item Double for-loop
             \begin{itemize}
@@ -297,76 +335,74 @@ int string_match(const string &s, const string &t) {
     \ei
 \end{frame}
 
-% TODO: KMP algorithm
 \begin{frame}
     \frametitle{Knuth--Morris--Pratt algorithm}
-    \vspace{30pt}
     \begin{itemize}
     \item The KMP algorithm avoids useless comparisons:
         \begin{itemize}
             \item $S$: \texttt{\textcolor{red}{b}acbababaabcbab}
             \item $T$: \phantom{\texttt{}}\texttt{\textcolor{red}{a}babaca}
         \end{itemize}
+    \item[] \phantom{The number of shifts depend on which characters are currently matched}
     \end{itemize}
 \end{frame}
 \begin{frame}
     \frametitle{Knuth--Morris--Pratt algorithm}
-    \vspace{30pt}
     \begin{itemize}
     \item The KMP algorithm avoids useless comparisons:
         \begin{itemize}
             \item $S$: \texttt{b\textcolor{green}{a}\textcolor{red}{c}bababaabcbab}
             \item $T$: \phantom{\texttt{a}}\texttt{\textcolor{green}{a}\textcolor{red}{b}abaca}
         \end{itemize}
+    \item[] \phantom{The number of shifts depend on which characters are currently matched}
     \end{itemize}
 \end{frame}
 \begin{frame}
     \frametitle{Knuth--Morris--Pratt algorithm}
-    \vspace{30pt}
     \begin{itemize}
     \item The KMP algorithm avoids useless comparisons:
         \begin{itemize}
             \item $S$: \texttt{ba\textcolor{red}{c}bababaabcbab}
             \item $T$: \phantom{\texttt{aa}}\texttt{\textcolor{red}{a}babaca}
         \end{itemize}
+    \item[] \phantom{The number of shifts depend on which characters are currently matched}
     \end{itemize}
 \end{frame}
 \begin{frame}
     \frametitle{Knuth--Morris--Pratt algorithm}
-    \vspace{30pt}
     \begin{itemize}
     \item The KMP algorithm avoids useless comparisons:
         \begin{itemize}
             \item $S$: \texttt{bac\textcolor{red}{b}ababaabcbab}
             \item $T$: \phantom{\texttt{aaa}}\texttt{\textcolor{red}{a}babaca}
         \end{itemize}
+    \item[] \phantom{The number of shifts depend on which characters are currently matched}
     \end{itemize}
 \end{frame}
 \begin{frame}
     \frametitle{Knuth--Morris--Pratt algorithm}
-    \vspace{30pt}
     \begin{itemize}
     \item The KMP algorithm avoids useless comparisons:
         \begin{itemize}
             \item $S$: \texttt{bacb\textcolor{green}{ababa}\textcolor{red}{a}bcbab}
             \item $T$: \phantom{\texttt{aaaa}}\texttt{\textcolor{green}{ababa}\textcolor{red}{c}a}
         \end{itemize}
+    \item[] \phantom{The number of shifts depend on which characters are currently matched}
     \end{itemize}
 \end{frame}
 \begin{frame}
     \frametitle{Knuth--Morris--Pratt algorithm}
-    \vspace{30pt}
     \begin{itemize}
     \item The KMP algorithm avoids useless comparisons:
         \begin{itemize}
             \item $S$: \texttt{bacbab\textcolor{green}{aba}\textcolor{red}{a}bcbab}
             \item $T$: \phantom{\texttt{aaaaaa}}\texttt{\textcolor{green}{aba}\textcolor{red}{b}aca}
         \end{itemize}
+    \item[] \phantom{The number of shifts depend on which characters are currently matched}
     \end{itemize}
 \end{frame}
 \begin{frame}
     \frametitle{Knuth--Morris--Pratt algorithm}
-    \vspace{30pt}
     \begin{itemize}
     \item The KMP algorithm avoids useless comparisons:
         \begin{itemize}
@@ -379,7 +415,6 @@ int string_match(const string &s, const string &t) {
 
 \begin{frame}
     \frametitle{Knuth--Morris--Pratt algorithm}
-    \vspace{10pt}
     \begin{itemize}
         \item How are the number of shifts determined?
             \vspace{5pt}
@@ -406,7 +441,6 @@ int string_match(const string &s, const string &t) {
 
 \begin{frame}
     \frametitle{Knuth--Morris--Pratt algorithm}
-    \vspace{30pt}
     \begin{itemize}
         \item Example:
         \begin{itemize}
@@ -423,7 +457,6 @@ int string_match(const string &s, const string &t) {
 
 \begin{frame}
     \frametitle{Knuth--Morris--Pratt algorithm}
-    \vspace{40pt}
     \begin{itemize}
         \item Given $\pi$, matching only takes $O(n)$ time
         \item $\pi$ can be computed in $O(m)$ time
@@ -484,7 +517,6 @@ int string_match(const string &s, const string &t) {
 \end{frame}
 
 \begin{frame}{Sets of strings}
-    \vspace{30pt}
     \bi
 \item We often have sets (or maps) of strings
 \item Insertions and lookups usually guarantee $O(\log n)$ comparisons
@@ -495,7 +527,6 @@ int string_match(const string &s, const string &t) {
     \ei
 \end{frame}
 
-% TODO: Trie
 \begin{frame}[fragile]{Tries}
 
 \begin{forest}
@@ -828,20 +859,15 @@ if (contains(trie, "banani")) {
 \end{frame}
 
 \begin{frame}{Tries}
-    \vspace{30pt}
     \bi
         \item Time complexity?
         \vspace{10pt}
         \item Let $k$ be the length of the string we're inserting/looking for
         \item Lookup and insertion are both $O(k)$
-        \vspace{10pt}
-        \item Also very space efficient...
     \ei
 \end{frame}
 
-% TODO: Suffix trie
 \begin{frame}{Suffix tries}
-    \vspace{20pt}
     \bi
         \item Say we're dealing with some string $S$ of length $n$
         \vspace{10pt}
@@ -928,9 +954,7 @@ for tree={
 \end{center}
 \end{frame}
 
-% TODO: Applications of Suffix trie
 \begin{frame}{Suffix tries}
-    \vspace{20pt}
     \bi
         \item There are a lot of cool things we can do with suffix tries
         \vspace{10pt}
@@ -1011,9 +1035,7 @@ for tree={
 \end{center}
 \end{frame}
 
-% TODO: Construction of Suffix tries is too slow...
 \begin{frame}{Suffix tries}
-    \vspace{20pt}
     \bi
         \item String matching is fast if we have the suffix trie for $S$
             \vspace{10pt}
@@ -1026,9 +1048,7 @@ for tree={
     \ei
 \end{frame}
 
-% TODO: Suffix tree
 \begin{frame}{Suffix trees}
-    \vspace{30pt}
     \bi
         \item There exists a compressed version of a suffix trie, called a suffix tree
         \vspace{10pt}
@@ -1037,9 +1057,7 @@ for tree={
     \ei
 \end{frame}
 
-% TODO: Suffix array
 \begin{frame}{Suffix arrays}
-    \vspace{30pt}
     \bi
         \item A variation of the previous structures
         \item Can do everything the other structures can do, with a small overhead
@@ -1076,8 +1094,6 @@ ni
 \end{frame}
 
 \begin{frame}[fragile]{Suffix arrays}
-    \vspace{40pt}
-
     \bi
         \item We can use this array to do everything that suffix tries can do
             \vspace{10pt}
@@ -1086,7 +1102,6 @@ ni
 \end{frame}
 
 \begin{frame}[fragile]{Suffix arrays}
-    \vspace{10pt}
     \bi
 \item Let's look for \texttt{nan}
 \item<2-> The first letter in the string has to be \texttt{n}, so we can binary search for the range of strings starting with \texttt{n}
@@ -1104,7 +1119,6 @@ ni
 \end{frame}
 
 \begin{frame}[fragile]{Suffix arrays}
-    \vspace{10pt}
     \bi
 \item Let's look for \texttt{nan}
 \item The first letter in the string has to be \texttt{n}, so we can binary search for the range of strings starting with \texttt{n}
@@ -1122,7 +1136,6 @@ ni
 \end{frame}
 
 \begin{frame}[fragile]{Suffix arrays}
-    \vspace{10pt}
     \bi
 \item Let's look for \texttt{nan}
 \item The second letter in the string has to be \texttt{a}, so we can binary search for the range of strings that have \texttt{a} as the second letter
@@ -1140,7 +1153,6 @@ ni
 \end{frame}
 
 \begin{frame}[fragile]{Suffix arrays}
-    \vspace{10pt}
     \bi
 \item Let's look for \texttt{nan}
 \item The second letter in the string has to be \texttt{a}, so we can binary search for the range of strings that have \texttt{a} as the second letter
@@ -1152,7 +1164,6 @@ nani
 \end{frame}
 
 \begin{frame}[fragile]{Suffix arrays}
-    \vspace{10pt}
     \bi
 \item Let's look for \texttt{nan}
 \item The third letter in the string has to be \texttt{n}, so we can binary search for the range of strings that have \texttt{n} as the third letter
@@ -1164,7 +1175,6 @@ nani
 \end{frame}
 
 \begin{frame}[fragile]{Suffix arrays}
-    \vspace{10pt}
     \bi
 \item Let's look for \texttt{nan}
 \item The third letter in the string has to be \texttt{n}, so we can binary search for the range of strings that have \texttt{n} as the third letter
@@ -1179,7 +1189,6 @@ nani
 \end{frame}
 
 \begin{frame}{Suffix arrays}
-    \vspace{30pt}
     \bi
         \item Time complexity?
             \vspace{5pt}
@@ -1191,7 +1200,6 @@ nani
 \end{frame}
 
 \begin{frame}{Suffix arrays}
-    \vspace{30pt}
     \bi
         \item But how do we construct a suffix array for a string?
             \vspace{10pt}
@@ -1345,7 +1353,6 @@ int lcp(int x, int y) {
 \end{frame}
 
 \begin{frame}{Longest common substring}
-    \vspace{30pt}
     \bi
         \item Given two strings $S$ and $T$, find their longest common substring
             \vspace{10pt}

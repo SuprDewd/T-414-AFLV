@@ -1,9 +1,12 @@
 #include <complex>
+using namespace std;
 #define P(p) const point &p
 #define L(p0, p1) P(p0), P(p1)
 #define C(p0, r) P(p0), double r
 #define PP(pp) pair<point,point> &pp
 typedef complex<double> point;
+const double pi = acos(-1.0);
+const double EPS = 1e-9;
 double dot(P(a), P(b)) { 
     return real(conj(a) * b); 
 }
@@ -46,19 +49,30 @@ point closest_point(L(a, b), P(c), bool segment = false) {
     double t = dot(c - a, b - a) / norm(b - a);
     return a + t * (b - a);
 }
-int intersect(C(A, rA), C(B, rB), point & res1, point & res2) { 
-    double d = abs(B - A);
-    if ( rA + rB <  d - EPS || d < abs(rA - rB) - EPS) {
-        return 0;
+
+typedef vector<point> polygon;
+#define MAXN 1000
+point hull[MAXN];
+bool cmp(const point &a, const point &b) {
+    return abs(real(a) - real(b)) > EPS ?
+        real(a) < real(b) : imag(a) < imag(b); }
+int convex_hull(vector<point> p) {
+    int n = p.size(), l = 0;
+    sort(p.begin(), p.end(), cmp);
+    for (int i = 0; i < n; i++) {
+        if (i > 0 && p[i] == p[i - 1])
+            continue;
+        while (l >= 2 && ccw(hull[l - 2], hull[l - 1], p[i]) >= 0)
+            l--;
+        hull[l++] = p[i];
     }
-    double a = (rA*rA - rB*rB + d*d) / 2*d;
-    double h = sqrt(rA*rA - a*a);
-    point v = normalize(B - A, a)
-    point u = normalize(rotate(B-A), h);
-    res1 = A + v + u;
-    res2 = A + v - u;
-    if (abs(u) < EPS) {
-        return 1; 
+    int r = l;
+    for (int i = n - 2; i >= 0; i--) {
+        if (p[i] == p[i + 1])
+            continue;
+        while (r - l >= 1 && ccw(hull[r - 2], hull[r - 1], p[i]) >= 0)
+            r--;
+        hull[r++] = p[i];
     }
-    return 2;
+    return l == 1 ? 1 : r - 1;
 }

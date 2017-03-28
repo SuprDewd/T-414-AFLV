@@ -1,108 +1,138 @@
-\documentclass[12pt,t]{beamer}
-\usepackage{graphicx}
-\setbeameroption{hide notes}
-\setbeamertemplate{note page}[plain]
+% \documentclass[10pt]{beamer}
+% \usepackage[utf8]{inputenc}
+% \usepackage[T1]{fontenc}
+% \usetheme{metropolis}
+% \usepackage{booktabs}
+% \usepackage[scale=2]{ccicons}
+% \usepackage{pgfplots}
+% \usepgfplotslibrary{dateplot}
+% \usepackage{xspace}
+% \usepackage{pbox}
+%
+% \usepackage{mathtools}
+% \usepackage{colortbl}
+% \usepackage{pgf}
+% \usepackage{pgfkeys}
+% \usepackage{tikz}
+% \usetikzlibrary{fpu}
+% \usepackage{tkz-euclide}
+% % \usepackage{intersections}
+% \usetkzobj{all}
+% \usetikzlibrary{arrows,shapes,angles,quotes,shapes, calc, decorations}
+%
+% % a few macros
+% \newcommand{\bi}{\begin{itemize}}
+% \newcommand{\ei}{\end{itemize}}
+% \newcommand{\ig}{\includegraphics}
+% \newcommand{\subt}[1]{{\footnotesize \color{subtitle} {#1}}}
+% \definecolor{hilight}{RGB}{235,129,27}
+% \definecolor{vhilight}{RGB}{235,129,27}
+%
+% % title info
+% \title{Geometry}
+% \author{Tómas Ken Magnússon \\ Bjarki Ágúst Guðmundsson}
+% \institute{\href{http://ru.is/td}{School of Computer Science} \\[2pt] \href{http://ru.is}{Reykjavík University}}
+% \titlegraphic{\hfill\includegraphics[height=0.6cm]{kattis}}
+% \date{\textbf{Árangursrík forritun og lausn verkefna}}
+%
+% % Tikz
+% \usepackage{tikz}
+% \usetikzlibrary{arrows,shapes}
+%
+% % Minted
+% \usepackage{minted}
+% \usemintedstyle{manni}
+% \newminted{cpp}{fontsize=\footnotesize}
+%
+% % Graph styles
+% \tikzstyle{vertex}=[circle,fill=black!50,minimum size=15pt,inner sep=0pt, font=\small]
+% \tikzstyle{selected vertex} = [vertex, fill=red!24]
+% \tikzstyle{edge} = [draw,thick,-]
+% \tikzstyle{dedge} = [draw,thick,->]
+% \tikzstyle{weight} = [font=\scriptsize,pos=0.5]
+% \tikzstyle{selected edge} = [draw,line width=2pt,-,red!50]
+% \tikzstyle{ignored edge} = [draw,line width=5pt,-,black!20]
+%
+% \tikzset{
+%   treenode/.style = {align=center, inner sep=0pt, text centered,
+%     font=\sffamily},
+%   vertex/.style = {treenode, circle, black, font=\sffamily\bfseries\tiny, draw=black, text width=1.8em},% arbre rouge noir, noeud noir
+%   rvertex/.style = {treenode, circle, black, font=\sffamily\bfseries\tiny, draw=red, text width=1.8em},% arbre rouge noir, noeud noir
+% }
+%
+% % named colors
+% \definecolor{offwhite}{RGB}{249,242,215}
+% \definecolor{foreground}{RGB}{255,255,255}
+% \definecolor{background}{RGB}{24,24,24}
+% \definecolor{title}{RGB}{107,174,214}
+% \definecolor{gray}{RGB}{155,155,155}
+% \definecolor{subtitle}{RGB}{102,255,204}
+% \definecolor{hilight}{RGB}{102,255,204}
+% \definecolor{vhilight}{RGB}{255,111,207}
+% \definecolor{lolight}{RGB}{155,155,155}
+% %\definecolor{green}{RGB}{125,250,125}
+%
+% \def\hepta{\draw[foreground](A) -- (B) -- (C) -- (D) -- (E) -- (F) -- (G) -- cycle;}
+%
+% % Macro for drawing polygon diagonals. 
+% % Example \slice{A/C,C/E,E/G,C/G}
+%
+% \newcommand{\slice}[1]{%
+%     \hepta
+%     \draw[foreground] \foreach \x/\y in {#1} {(\x)--(\y)};
+% }
+%
+% \begin{document}
+% \maketitle
+\documentclass[10pt]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usetheme{metropolis}
+\usepackage{booktabs}
+\usepackage[scale=2]{ccicons}
+\usepackage{pgfplots}
+\usepgfplotslibrary{dateplot}
+\usepackage{xspace}
+\usepackage{pbox}
 
-% get rid of junk
-\usetheme{default}
-\beamertemplatenavigationsymbolsempty
-\hypersetup{pdfpagemode=UseNone} % don't show bookmarks on initial view
-
-% font
-\usepackage{fontspec}
-\setsansfont{TeX Gyre Heros}
-\setbeamerfont{note page}{family*=pplx,size=\footnotesize} % Palatino for notes
-% "TeX Gyre Heros can be used as a replacement for Helvetica"
-% In Unix, unzip the following into ~/.fonts
-% In Mac, unzip it, double-click the .otf files, and install using "FontBook"
-%   http://www.gust.org.pl/projects/e-foundry/tex-gyre/heros/qhv2.004otf.zip
-
-% named colors
-\definecolor{offwhite}{RGB}{249,242,215}
-\definecolor{foreground}{RGB}{255,255,255}
-\definecolor{background}{RGB}{24,24,24}
-\definecolor{title}{RGB}{107,174,214}
-\definecolor{gray}{RGB}{155,155,155}
-\definecolor{subtitle}{RGB}{102,255,204}
-\definecolor{hilight}{RGB}{102,255,204}
-\definecolor{vhilight}{RGB}{255,111,207}
-\definecolor{lolight}{RGB}{155,155,155}
-\definecolor{hilightlight}{RGB}{102,255,204}
-\definecolor{vhilightlight}{RGB}{255,111,207}
-%\definecolor{green}{RGB}{125,250,125}
-
-% use those colors
-\setbeamercolor{titlelike}{fg=title}
-\setbeamercolor{subtitle}{fg=subtitle}
-\setbeamercolor{institute}{fg=gray}
-\setbeamercolor{normal text}{fg=foreground,bg=background}
-\setbeamercolor{item}{fg=foreground} % color of bullets
-\setbeamercolor{subitem}{fg=gray}
-\setbeamercolor{itemize/enumerate subbody}{fg=gray}
-\setbeamertemplate{itemize subitem}{{\textendash}}
-\setbeamerfont{itemize/enumerate subbody}{size=\footnotesize}
-\setbeamerfont{itemize/enumerate subitem}{size=\footnotesize}
-
-% settings for table of contents
-\setbeamercolor{section in toc}{fg=foreground,bg=background}
-\setbeamerfont{subsection in toc}{size=\footnotesize}
-\setbeamertemplate{section in toc}{{\scriptsize\leavevmode\raise1.35pt\hbox{$\blacktriangleright$}} \inserttocsection}
-%\setbeamertemplate{subsection in toc}{\quad{\tiny\leavevmode\raise1.5pt\hbox{$\blacktriangleright$}} \footnotesize\inserttocsubsection\\}
-\setbeamertemplate{subsection in toc}{\quad\quad\textendash\enspace\inserttocsubsection\\}
-
-% page number
-\setbeamertemplate{footline}{%
-    \raisebox{5pt}{\makebox[\paperwidth]{\hfill\makebox[20pt]{\color{gray}
-          \scriptsize\insertframenumber}}}\hspace*{5pt}}
-
-% add a bit of space at the top of the notes page
-\addtobeamertemplate{note page}{\setlength{\parskip}{12pt}}
-
-% add subsection as frame title when it is empty
-\makeatletter
-  \CheckCommand*\beamer@checkframetitle{%
-    \@ifnextchar\bgroup\beamer@inlineframetitle{}}
-  \renewcommand*\beamer@checkframetitle{%
-    \global\let\beamer@frametitle\relax\@ifnextchar%
-    \bgroup\beamer@inlineframetitle{}}
-\makeatother
-
-\addtobeamertemplate{frametitle}{
-  \ifx\insertframetitle\empty
-      \frametitle{\insertsubsectionhead}
-  \else
-  \fi
- }{}
+\usepackage{mathtools}
+\usepackage{colortbl}
+\usepackage{pgf}
+\usepackage{pgfkeys}
+\usepackage{tikz}
+\usetikzlibrary{fpu}
+\usepackage{tkz-euclide}
+\usetkzobj{all}
 
 % a few macros
 \newcommand{\bi}{\begin{itemize}}
 \newcommand{\ei}{\end{itemize}}
 \newcommand{\ig}{\includegraphics}
-\newcommand{\subt}[1]{{\footnotesize \color{subtitle} {#1}}}
-
 
 % title info
 \title{Geometry}
-%\subtitle{Part 2}
-\author{Tómas Ken Magnússon\\Bjarki Ágúst Guðmundsson}
+\author{Tómas Ken Magnússon \\ Bjarki Ágúst Guðmundsson}
 \institute{\href{http://ru.is/td}{School of Computer Science} \\[2pt] \href{http://ru.is}{Reykjavík University}}
-\date{Árangursrík forritun og lausn verkefna}
-% \date{\href{http://www.biostat.wisc.edu/~kbroman}{\tt \scriptsize biostat.wisc.edu/{\textasciitilde}kbroman}
-% \\[-4pt]
-% \href{http://github.com/kbroman}{\tt \scriptsize github.com/kbroman}
-% }
+\titlegraphic{\hfill\includegraphics[height=0.6cm]{kattis}}
+\date{\textbf{Árangursrík forritun og lausn verkefna}}
 
+%\addtobeamertemplate{frametitle}{
+   %\let\insertframetitle\insertsectionhead}{}
+\addtobeamertemplate{frametitle}{
+   \let\insertframetitle\insertsubsectionhead}{}
+
+\makeatletter
+  \CheckCommand*\beamer@checkframetitle{\@ifnextchar\bgroup\beamer@inlineframetitle{}}
+  \renewcommand*\beamer@checkframetitle{\global\let\beamer@frametitle\relax\@ifnextchar\bgroup\beamer@inlineframetitle{}}
+\makeatother
 
 % Tikz
 \usepackage{tikz}
-\usepackage{tkz-euclide}
-% \usepackage{intersections}
-\usetkzobj{all}
-\usetikzlibrary{arrows,shapes,angles,quotes,shapes, calc, decorations}
+\usetikzlibrary{arrows,shapes}
 
 % Minted
 \usepackage{minted}
-\usemintedstyle{monokai}
+\usemintedstyle{manni}
 \newminted{cpp}{fontsize=\footnotesize}
 
 % Graph styles
@@ -114,31 +144,41 @@
 \tikzstyle{selected edge} = [draw,line width=2pt,-,red!50]
 \tikzstyle{ignored edge} = [draw,line width=5pt,-,black!20]
 
-
-\begin{document}
-
-% title slide
-{
-    \setbeamertemplate{footline}{} % no page number here
-    \frame{
-        \titlepage
-    }
+\tikzset{
+  treenode/.style = {align=center, inner sep=0pt, text centered,
+    font=\sffamily},
+  vertex/.style = {treenode, circle, black, font=\sffamily\bfseries\tiny, draw=black, text width=1.8em},% arbre rouge noir, noeud noir
+  rvertex/.style = {treenode, circle, black, font=\sffamily\bfseries\tiny, draw=red, text width=1.8em},% arbre rouge noir, noeud noir
 }
 
-%\AtBeginSection[]
-%{
-  %\begin{frame}<beamer>{Geometry}
-    %\vspace{20pt}
-    %\tableofcontents[
-      %currentsection,
-      %hideallsubsections,
-      %%currentsubsection,
-      %%hideothersubsections,
-      %sectionstyle=show/shaded%,
-      %%subsectionstyle=show/shaded/hide
-    %]
-  %\end{frame}
-%}
+% named colors
+\definecolor{offwhite}{RGB}{249,242,215}
+\definecolor{foreground}{HTML}{23373b}
+\definecolor{background}{RGB}{24,24,24}
+\definecolor{title}{RGB}{107,174,214}
+\definecolor{gray}{RGB}{155,155,155}
+\definecolor{subtitle}{RGB}{102,255,204}
+%\definecolor{hilight}{RGB}{102,255,204}
+%\definecolor{vhilight}{RGB}{255,111,207}
+\definecolor{lolight}{RGB}{155,155,155}
+\definecolor{green}{RGB}{125,250,125}
+
+\definecolor{hilight}{RGB}{235,129,27}
+%\definecolor{vhilight}{RGB}{235,129,27}
+\definecolor{vhilight}{HTML}{14B03D}
+
+\def\hepta{\draw[foreground](A) -- (B) -- (C) -- (D) -- (E) -- (F) -- (G) -- cycle;}
+
+% Macro for drawing polygon diagonals. 
+% Example \slice{A/C,C/E,E/G,C/G}
+
+\newcommand{\slice}[1]{%
+    \hepta
+    \draw[foreground] \foreach \x/\y in {#1} {(\x)--(\y)};
+}
+
+\begin{document}
+\maketitle
 
 \begin{frame}<beamer>{Today we're going to cover}
     \vspace{40pt}
@@ -186,7 +226,7 @@
         \item Points are represented by a pair of numbers, $(x,y)$.
         \onslide<3->
         \item Vectors are represented in the same way.
-        \item Thinking of points as vectors us to do many things.
+        \item Thinking of points as vectors allows us to do many things.
       \ei
     \end{column}
   \end{columns}
@@ -233,21 +273,21 @@
         \onslide<2->
         \item Simplest operation, addition is defined as
           \[
-            {\color{title!50}
+            {\color{title!80!black}
             \begin{pmatrix}
               x_0 \\
               y_0
             \end{pmatrix}
             }
             +
-            {\color{hilight!50}
+            {\color{hilight!90!black}
             \begin{pmatrix}
               x_1 \\
               y_1
             \end{pmatrix}
             }
             =
-            {\color{vhilight!50}
+            {\color{vhilight!80!black}
             \begin{pmatrix}
               x_0 + x_1 \\
               y_0 + y_1
@@ -257,21 +297,21 @@
         \onslide<4->
         \item Subtraction is defined in the same manner
           \[
-            {\color{hilight!50}
+            {\color{hilight!90!black}
             \begin{pmatrix}
               x_0 \\
               y_0
             \end{pmatrix}
             }
             -
-            {\color{title!50}
+            {\color{title!80!black}
             \begin{pmatrix}
               x_1 \\
               y_1
             \end{pmatrix}
             }
             =
-            {\color{vhilight!50}
+            {\color{vhilight!80!black}
             \begin{pmatrix}
               x_0 - x_1 \\
               y_0 - y_1
@@ -326,7 +366,7 @@ typedef complex<double> point;
   as vectors or points on the complex plane.
   \bi
     \onslide<2->
-    \item \mintinline{cpp}{double real(p)} returns the real part, or in our case, the $x$ value
+    \item \mintinline{cpp}{double real(p)} returns the real part, in our case, the $x$ value
       of \mintinline{cpp}{p}
     \onslide<3->
     \item \mintinline{cpp}{double imag(p)} returns the imaginary part, $y$ value of \mintinline{cpp}{p}.
@@ -478,7 +518,7 @@ struct point {
         \onslide<3->
         \item Or as a point and a direction vector.
           \[
-            {\color{vhilight!70}p} + {\color{hilight!70}t} \cdot {\color{title!80}\vec{r}}
+            {\color{vhilight}p} + {\color{hilight}t} \cdot {\color{title}\vec{r}}
           \]
         \onslide<4->
         \vspace{-10pt}
@@ -530,9 +570,9 @@ pair<point,point>
       \bi
         \item Circles are very easy to represent.
         \onslide<2->
-        \item Center point ${\color{title!80}p = (x,y)}$.
+        \item Center point ${\color{title}p = (x,y)}$.
         \onslide<3->
-        \item And the radius ${\color{vhilight!70}r}$.
+        \item And the radius ${\color{vhilight}r}$.
         \onslide<4->
         \begin{minted}{cpp}
 pair<point,double>
@@ -634,7 +674,7 @@ pair<point,double>
         \only<2>{
           \item And the projection of $\vec v$ onto $\vec u$.
             \[
-              \vec{v}_{\vec{u}} = \left(\frac{\vec{u}\cdot\vec{v}}{\lvert u \rvert}\right) \vec{u}
+              \vec{v}_{\vec{u}} = \left(\frac{\vec{u}\cdot\vec{v}}{\lvert u \rvert^2}\right) \vec{u}
             \]
         }
         \only<3->{
@@ -893,117 +933,119 @@ bool collinear(P(a), P(b), P(c)) {
   \]
 \end{frame}
 
-\begin{frame}[fragile]
-  Quite similar problem is to find the intersections of two circles.
-  \begin{columns}
-    \begin{column}{0.6\textwidth}
-      \begin{figure}
-        \begin{tikzpicture}[auto,swap]
-          \scriptsize
-          \coordinate (A) at (0,0);
-          \coordinate (B) at (3,0);
+%\begin{frame}[fragile]
+  %Quite similar problem is to find the intersections of two circles.
+  %\begin{columns}
+    %\begin{column}{0.6\textwidth}
+      %\begin{figure}
+        %\begin{tikzpicture}[auto,swap]
+          %\scriptsize
+          %\coordinate (A) at (0,0);
+          %\coordinate (B) at (3,0);
 
-          \coordinate (P) at (1.2083333,0);
-          \coordinate (Q) at (1.2083333,0.88878037);
-          \coordinate (R) at (1.2083333,-0.88878037);
+          %\coordinate (P) at (1.2083333,0);
+          %\coordinate (Q) at (1.2083333,0.88878037);
+          %\coordinate (R) at (1.2083333,-0.88878037);
 
-          \draw[title,thick] (A) -- node[above left] {$r_A$} (Q);
-          \draw[title,thick] (B) -- node[above right] {$r_B$} (Q);
+          %\draw[title,thick] (A) -- node[above left] {$r_A$} (Q);
+          %\draw[title,thick] (B) -- node[above right] {$r_B$} (Q);
 
-          \draw (A) node[left] {\scriptsize$A$};
-          \draw (B) node[right] {\scriptsize$B$};
-          \draw[fill,vhilight] (A) circle[radius=1.2pt];
-          \draw[fill,vhilight] (B) circle[radius=1.2pt];
-          \draw[hilight,thick] (A) circle[radius=1.5cm];
-          \draw[hilight,thick] (B) circle[radius=2cm];
+          %\draw (A) node[left] {\scriptsize$A$};
+          %\draw (B) node[right] {\scriptsize$B$};
+          %\draw[fill,vhilight] (A) circle[radius=1.2pt];
+          %\draw[fill,vhilight] (B) circle[radius=1.2pt];
+          %\draw[hilight,thick] (A) circle[radius=1.5cm];
+          %\draw[hilight,thick] (B) circle[radius=2cm];
 
-          \visible<1-5>{
-            \draw[vhilight,thick] (A) --  node[below,xshift=5pt] {\scriptsize$d$} (B);
-          }
+          %\visible<1-5>{
+            %\draw[vhilight,thick] (A) --  node[below,xshift=5pt] {\scriptsize$d$} (B);
+          %}
 
-          \visible<6->{
-            \draw[gray,thick] (A) circle[radius=1.5cm];
-            \draw[gray,thick] (B) circle[radius=2cm];
-            \draw[fill,vhilight] (A) circle[radius=1.2pt];
-            \draw[fill,vhilight] (B) circle[radius=1.2pt];
+          %\visible<6->{
+            %\draw[gray,thick] (A) circle[radius=1.5cm];
+            %\draw[gray,thick] (B) circle[radius=2cm];
+            %\draw[fill,vhilight] (A) circle[radius=1.2pt];
+            %\draw[fill,vhilight] (B) circle[radius=1.2pt];
 
-            \draw[gray,thick] (P) -- (R);
-            \draw[hilight,thick] (Q) -- node[right=7pt] {$h$} (P);
+            %\draw[gray,thick] (P) -- (R);
+            %\draw[hilight,thick] (Q) -- node[right=7pt] {$h$} (P);
 
-            \draw[vhilight, thick] (A) -- node[below] {$a$} (P);
-            \draw[vhilight, thick] (B) -- node[below] {$b$} (P);
+            %\draw[vhilight, thick] (A) -- node[below] {$a$} (P);
+            %\draw[vhilight, thick] (B) -- node[below] {$b$} (P);
 
-            \draw[fill,hilight] (P) circle[radius=1.2pt];
-            \draw[fill,hilight] (Q) circle[radius=1.2pt];
-            \draw[fill,hilight] (R) circle[radius=1.2pt];
-          }
+            %\draw[fill,hilight] (P) circle[radius=1.2pt];
+            %\draw[fill,hilight] (Q) circle[radius=1.2pt];
+            %\draw[fill,hilight] (R) circle[radius=1.2pt];
+          %}
 
-        \end{tikzpicture}
-      \end{figure}
-    \end{column}
-    \begin{column}{0.5\textwidth}
-      \footnotesize
-      \only<2-5>{
-        \bi
-            \onslide<2-5>{
-            \item If $d > r_0 + r_1$ the circles do not intersect.
-            }
-            \onslide<3-5>{
-            \item If $d < \lvert r_0 - r_1 \rvert $, one circles is contained within the other.
-            }
-            \onslide<4-5>{
-            \item If $d = 0$ and $r_0 = r_1$, the circles are the same.
-            }
-            \onslide<5>{
-            \item Let's look at the last case.
-            }
-        \ei
-      }
-      \only<6->{
-          \bi
-            \onslide<6->{
-            \item We can solve for the vectors $a$ and $h$ from the equations
-                \[
-                a^2 + h^2 = r_0^2 \quad b^2 + h^2 = r_1^2
-                \]
-            }
-            \onslide<7->{
-            \item We get
-                \[
-                a = \frac{r_A^2 - r_B^2 + d^2)}{2\cdot d}
-                \]
-                \[
-                h^2 = r_A^2 - a^2
-                \]
-            }
-        \ei
-      }
-    \end{column}
-  \end{columns}
-\end{frame}
+        %\end{tikzpicture}
+      %\end{figure}
+    %\end{column}
+    %\begin{column}{0.5\textwidth}
+      %\footnotesize
+      %\only<2-5>{
+        %\bi
+            %\onslide<2-5>{
+            %\item If $d > r_0 + r_1$ the circles do not intersect.
+            %}
+            %\onslide<3-5>{
+            %\item If $d < \lvert r_0 - r_1 \rvert $, one circles is contained within the other.
+            %}
+            %\onslide<4-5>{
+            %\item If $d = 0$ and $r_0 = r_1$, the circles are the same.
+            %}
+            %\onslide<5>{
+            %\item Let's look at the last case.
+            %}
+        %\ei
+      %}
+      %\only<6->{
+          %\bi
+            %\onslide<6->{
+            %\item We can solve for the vectors $a$ and $h$ from the equations
+                %\[
+                %a^2 + h^2 = r_0^2 \quad b^2 + h^2 = r_1^2
+                %\]
+            %}
+            %\onslide<7->{
+            %\item We get
+                %\[
+                %a = \frac{r_A^2 - r_B^2 + d^2)}{2\cdot d}
+                %\]
+                %\[
+                %h^2 = r_A^2 - a^2
+                %\]
+            %}
+        %\ei
+      %}
+    %\end{column}
+  %\end{columns}
+%\end{frame}
 
-\begin{frame}[fragile]
-  \footnotesize
-  \begin{minted}{cpp}
-#define C(p, r) const point &p, double r
-int intersect(C(A, rA), C(B, rB), point & res1, point & res2) { 
-    double d = abs(B - A);
-    if ( rA + rB <  d - EPS || d < abs(rA - rB) - EPS){
-      return 0;
-    }
-    double a = (rA*rA - rB*rB + d*d) / 2*d;
-    double h = sqrt(rA*rA - a*a);
-    point v = normalize(B - A, a);
-    u = normalize(rotate(B-A), h);
-    res1 = A + v + u;
-    res2 = A + v - u;
-    if (abs(u) < EPS){
-        return 1;
-    }
-    return 2;
-}
-  \end{minted}
-\end{frame}
+%\begin{frame}[fragile]
+  %\footnotesize
+  %\begin{minted}{cpp}
+%#define C(p, r) const point &p, double r
+%int intersect(C(A, rA), C(B, rB), point & res1, point & res2) { 
+    %double d = abs(B - A);
+    %if ( rA + rB <  d - EPS || d < abs(rA - rB) - EPS){
+      %return 0;
+    %}
+    %double a = (rA*rA - rB*rB + d*d) / 2*d;
+    %double h = sqrt(rA*rA - a*a);
+    %point v = normalize(B - A, a);
+    %u = normalize(rotate(B-A), h);
+    %res1 = A + v + u;
+    %res2 = A + v - u;
+    %if (abs(u) < EPS){
+        %return 1;
+    %}
+    %return 2;
+%}
+  %\end{minted}
+%\end{frame}
+
+\section{Computational Geometry}
 
 \subsection{Polygons}
 \begin{frame}
@@ -1076,24 +1118,24 @@ int intersect(C(A, rA), C(B, rB), point & res1, point & res2) {
   \end{columns}
 \end{frame}
 
-\begin{frame}[fragile]
-  \vspace{20pt}
-  %Very simple code.
-  \footnotesize
-  \begin{minted}{cpp}
-double polygon_area_signed(const vector<point> &p) {
-    double area = 0;
-    int cnt = size(p);
-    for (int i = 1; i + 1 < cnt; i++){
-        area += cross(p[i] - p[0], p[i + 1] - p[0])/2;
-    }
-    return area;
-}
-double polygon_area(vector<point> &p) {
-    return abs(polygon_area_signed(p));
-}
-  \end{minted}
-\end{frame}
+%\begin{frame}[fragile]
+  %\vspace{20pt}
+  %%Very simple code.
+  %\footnotesize
+  %\begin{minted}{cpp}
+%double polygon_area_signed(const vector<point> &p) {
+    %double area = 0;
+    %int cnt = size(p);
+    %for (int i = 1; i + 1 < cnt; i++){
+        %area += cross(p[i] - p[0], p[i + 1] - p[0])/2;
+    %}
+    %return area;
+%}
+%double polygon_area(vector<point> &p) {
+    %return abs(polygon_area_signed(p));
+%}
+  %\end{minted}
+%\end{frame}
 
 \subsection{Convex hull}
 \begin{frame}[fragile]
@@ -1636,7 +1678,7 @@ int convex_hull(vector<point> p) {
   \vspace{30pt}
   Takk fyrir önnina! \\
   \vspace{15pt}
-  Gangi ykkur vel og góða skemmtun í prófinu á morgun!
+  Gangi ykkur vel og góða skemmtun í prófinu á föstudaginn!
 \end{frame}
 
 % TODO: MAYBE Floating point IF NOT COVERED

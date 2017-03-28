@@ -1,70 +1,25 @@
-\documentclass[12pt,t]{beamer}
-\usepackage{graphicx}
-\setbeameroption{hide notes}
-\setbeamertemplate{note page}[plain]
-
-% get rid of junk
-\usetheme{default}
-\beamertemplatenavigationsymbolsempty
-\hypersetup{pdfpagemode=UseNone} % don't show bookmarks on initial view
-
-% font
-\usepackage{fontspec}
-\setsansfont{TeX Gyre Heros}
-\setbeamerfont{note page}{family*=pplx,size=\footnotesize} % Palatino for notes
-% "TeX Gyre Heros can be used as a replacement for Helvetica"
-% In Unix, unzip the following into ~/.fonts
-% In Mac, unzip it, double-click the .otf files, and install using "FontBook"
-%   http://www.gust.org.pl/projects/e-foundry/tex-gyre/heros/qhv2.004otf.zip
-
-% named colors
-\definecolor{offwhite}{RGB}{249,242,215}
-\definecolor{foreground}{RGB}{255,255,255}
-\definecolor{background}{RGB}{24,24,24}
-\definecolor{title}{RGB}{107,174,214}
-\definecolor{gray}{RGB}{155,155,155}
-\definecolor{subtitle}{RGB}{102,255,204}
-\definecolor{hilight}{RGB}{102,255,204}
-\definecolor{vhilight}{RGB}{255,111,207}
-\definecolor{lolight}{RGB}{155,155,155}
-%\definecolor{green}{RGB}{125,250,125}
-
-% use those colors
-\setbeamercolor{titlelike}{fg=title}
-\setbeamercolor{subtitle}{fg=subtitle}
-\setbeamercolor{institute}{fg=gray}
-\setbeamercolor{normal text}{fg=foreground,bg=background}
-\setbeamercolor{item}{fg=foreground} % color of bullets
-\setbeamercolor{subitem}{fg=gray}
-\setbeamercolor{itemize/enumerate subbody}{fg=gray}
-\setbeamertemplate{itemize subitem}{{\textendash}}
-\setbeamerfont{itemize/enumerate subbody}{size=\footnotesize}
-\setbeamerfont{itemize/enumerate subitem}{size=\footnotesize}
-
-% page number
-\setbeamertemplate{footline}{%
-    \raisebox{5pt}{\makebox[\paperwidth]{\hfill\makebox[20pt]{\color{gray}
-          \scriptsize\insertframenumber}}}\hspace*{5pt}}
-
-% add a bit of space at the top of the notes page
-\addtobeamertemplate{note page}{\setlength{\parskip}{12pt}}
+\documentclass[10pt]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usetheme{metropolis}
+\usepackage{booktabs}
+\usepackage[scale=2]{ccicons}
+\usepackage{pgfplots}
+\usepgfplotslibrary{dateplot}
+\usepackage{xspace}
+\usepackage{pbox}
 
 % a few macros
 \newcommand{\bi}{\begin{itemize}}
 \newcommand{\ei}{\end{itemize}}
 \newcommand{\ig}{\includegraphics}
-\newcommand{\subt}[1]{{\footnotesize \color{subtitle} {#1}}}
 
 % title info
 \title{Data structures and libraries}
-\author{Bjarki Ágúst Guðmundsson \\ Tómas Ken Magnússon}
+\author{Bjarki Ágúst Guðmundsson\\ Tómas Ken Magnússon}
 \institute{\href{http://ru.is/td}{School of Computer Science} \\[2pt] \href{http://ru.is}{Reykjavík University}}
-\date{Árangursrík forritun og lausn verkefna}
-% \date{\href{http://www.biostat.wisc.edu/~kbroman}{\tt \scriptsize biostat.wisc.edu/{\textasciitilde}kbroman}
-% \\[-4pt]
-% \href{http://github.com/kbroman}{\tt \scriptsize github.com/kbroman}
-% }
-
+\titlegraphic{\hfill\includegraphics[height=0.6cm]{kattis}}
+\date{\textbf{Árangursrík forritun og lausn verkefna}}
 
 % Tikz
 \usepackage{tikz}
@@ -72,7 +27,7 @@
 
 % Minted
 \usepackage{minted}
-\usemintedstyle{monokai}
+\usemintedstyle{manni}
 \newminted{cpp}{fontsize=\footnotesize}
 
 % Graph styles
@@ -84,16 +39,15 @@
 \tikzstyle{selected edge} = [draw,line width=2pt,-,red!50]
 \tikzstyle{ignored edge} = [draw,line width=5pt,-,black!20]
 
+\tikzset{
+  treenode/.style = {align=center, inner sep=0pt, text centered,
+    font=\sffamily},
+  vertex/.style = {treenode, circle, black, font=\sffamily\bfseries\tiny, draw=black, text width=1.8em},% arbre rouge noir, noeud noir
+  rvertex/.style = {treenode, circle, black, font=\sffamily\bfseries\tiny, draw=red, text width=1.8em},% arbre rouge noir, noeud noir
+}
 
 \begin{document}
-
-% title slide
-{
-    \setbeamertemplate{footline}{} % no page number here
-    \frame{
-        \titlepage
-    }
-}
+\maketitle
 
 
 \begin{frame}{Today we're going to cover}
@@ -174,8 +128,9 @@
             \begin{tabular}{l|llll}
                 Type & Bytes & Min value & Max value & Precision \\
                 \hline
-                float & 4 & $\approx -3.4\times 10^{-38}$ & $\approx 3.4\times 10^{-38}$ & $\approx 7$ digits \\
-                double & 8 & $\approx -1.7\times 10^{-308}$ & $\approx 1.7\times 10^{-308}$ & $\approx 14$ digits \\
+                float & 4 & $\approx -3.4\times 10^{38}$ & $\approx 3.4\times 10^{38}$ & $\approx 7$ digits \\
+                double & 8 & $\approx -1.7\times 10^{308}$ & $\approx 1.7\times 10^{308}$ & $\approx 14$ digits \\
+                long double & 16 & $\approx -1.1\times\times 10^{4932}$ & $\approx 1.1\times 10^{4932}$ & $\approx 18$ digits \\
             \end{tabular}
         \end{center}
     }
@@ -204,9 +159,14 @@
     \ei
 \end{frame}
 
-\begin{frame}{Example problem: Integer Inquiry}
+% \begin{frame}{Example problem: Integer Inquiry}
+%     \bi
+%         \item http://uva.onlinejudge.org/external/4/424.html
+%     \ei
+% \end{frame}
+\begin{frame}{Example problem: Simple Addition}
     \bi
-        \item http://uva.onlinejudge.org/external/4/424.html
+        \item https://open.kattis.com/problems/simpleaddition
     \ei
 \end{frame}
 
@@ -237,14 +197,14 @@
 \begin{frame}{Data structures you've seen before}
     \vspace{5pt}
     \bi
-\item Static arrays \onslide<2->{- {\color{vhilight}int arr[10]}}
-\item Dynamic arrays \onslide<2->{- {\color{vhilight}vector<int>}}
-\item Linked lists \onslide<2->{- {\color{vhilight}list<int>}}
-\item Stacks \onslide<2->{- {\color{vhilight}stack<int>}}
-\item Queues \onslide<2->{- {\color{vhilight}queue<int>}}
-\item Priority Queues \onslide<2->{- {\color{vhilight}priority\_{}queue<int>}}
-\item Sets \onslide<2->{- {\color{vhilight}set<int>}}
-\item Maps \onslide<2->{- {\color{vhilight}map<int, int>}}
+\item Static arrays \onslide<2->{- \alert{int arr[10]}}
+\item Dynamic arrays \onslide<2->{- \alert{vector<int>}}
+\item Linked lists \onslide<2->{- \alert{list<int>}}
+\item Stacks \onslide<2->{- \alert{stack<int>}}
+\item Queues \onslide<2->{- \alert{queue<int>}}
+\item Priority queues \onslide<2->{- \alert{priority\_{}queue<int>}}
+\item Sets \onslide<2->{- \alert{set<int>}}
+\item Maps \onslide<2->{- \alert{map<int, int>}}
 
     \onslide<3->{
         \vspace{15pt}
@@ -268,13 +228,13 @@
     \bi
         \item Very common operations:
             \bi
-                \item Sorting an array \onslide<2->{- {\color{vhilight}sort(arr.begin(), arr.end())}}
-                \item Searching an unsorted array \onslide<2->{- {\color{vhilight}find(arr.begin(), arr.end(), x)}}
-                \item Searching a sorted array \onslide<2->{- {\color{vhilight}lower\_{}bound(arr.begin(), arr.end(), x)}}
+                \item Sorting an array \onslide<2->{- \alert{sort(arr.begin(), arr.end())}}
+                \item Searching an unsorted array \onslide<2->{- \alert{find(arr.begin(), arr.end(), x)}}
+                \item Searching a sorted array \onslide<2->{- \alert{lower\_{}bound(arr.begin(), arr.end(), x)}}
             \ei
 
         \item Again, usually in the standard library
-        \item We'll need different versions of binary search later which need custom code, but lower\_{}bound is enough for now
+        \item We'll need different versions of binary search later which need custom code, but \alert{lower\_{}bound} is enough for now
     \ei
 \end{frame}
 
@@ -328,7 +288,7 @@ if (x & (1<<i)) {
 \begin{frame}{Representing sets}
     \vspace{25pt}
     \bi
-        \item Why do this instead of using {\color{vhilight}set<int>}?
+        \item Why do this instead of using \alert{set<int>}?
         \item Very lightweight representation
         \item All subsets of the $n$ elements can be represented by integers in the range $0\ldots 2^{n}-1$
         \item Allows for easily iterating through all subsets (we'll see this later)
@@ -344,20 +304,25 @@ if (x & (1<<i)) {
     \ei
 \end{frame}
 
-\begin{frame}{Example problem: Broken Keyboard}
-    \bi
-        \item http://uva.onlinejudge.org/external/119/11988.html
-    \ei
-\end{frame}
-
 \begin{frame}{Applications of Stacks}
     \bi
-        \item Processing events in a first-in first-out order
+        \item Processing events in a last-in first-out order
         \item Simulating recursion
         \item Depth-first search in a graph
         \item Reverse a sequence
         \item Matching brackets
         \item And a lot more
+    \ei
+\end{frame}
+
+% \begin{frame}{Example problem: Broken Keyboard}
+%     \bi
+%         \item http://uva.onlinejudge.org/external/119/11988.html
+%     \ei
+% \end{frame}
+\begin{frame}{Example problem: Backspace}
+    \bi
+        \item https://open.kattis.com/problems/backspace
     \ei
 \end{frame}
 
@@ -431,12 +396,6 @@ if (x & (1<<i)) {
         \hfill%
         \begin{column}{.55\textwidth}
             \begin{figure}
-\tikzset{
-  treenode/.style = {align=center, inner sep=0pt, text centered,
-    font=\sffamily},
-  vertex/.style = {treenode, circle, white, font=\sffamily\bfseries\tiny, draw=white,
-    text width=1.8em},% arbre rouge noir, noeud noir
-}
 
 \begin{tikzpicture}[->,>=stealth',level/.style={sibling distance = 5cm/#1,
   level distance = 1.8cm},scale=0.6] 
@@ -479,18 +438,12 @@ if (x & (1<<i)) {
 
             \bi
                 \item Idea: In each vertex store the size of the subtree
-                \item This information can be maintained when we insert/delete elements without adding time complexity
+                \item This information can be maintained when we insert/delete elements without increasing time complexity
             \ei
         \end{column}%
         \hfill%
         \begin{column}{.55\textwidth}
             \begin{figure}
-\tikzset{
-  treenode/.style = {align=center, inner sep=0pt, text centered,
-    font=\sffamily},
-  vertex/.style = {treenode, circle, white, font=\sffamily\bfseries\tiny, draw=white,
-    text width=1.8em},% arbre rouge noir, noeud noir
-}
 
 \begin{tikzpicture}[->,>=stealth',level/.style={sibling distance = 5cm/#1,
   level distance = 1.8cm},scale=0.6] 
@@ -541,14 +494,7 @@ if (x & (1<<i)) {
         \hfill%
         \begin{column}{.55\textwidth}
             \begin{figure}
-\tikzset{
-  treenode/.style = {align=center, inner sep=0pt, text centered,
-    font=\sffamily},
-  vertex/.style = {treenode, circle, white, font=\sffamily\bfseries\tiny, draw=white,
-    text width=1.8em},% arbre rouge noir, noeud noir
-}
-
-\begin{tikzpicture}[->,>=stealth',level/.style={sibling distance = 5cm/#1,
+                \begin{tikzpicture}[->,>=stealth',level/.style={sibling distance = 5cm/#1,
   level distance = 1.8cm},scale=0.6] 
 \node [vertex] {33, 14}
     child{ node [vertex] {15, 5}
@@ -580,7 +526,6 @@ if (x & (1<<i)) {
         \end{column}%
     \end{columns}
 \end{frame}
-
 \begin{frame}[fragile]{Augmenting Binary Search Trees}
 
     \begin{columns}[T]
@@ -599,14 +544,7 @@ if (x & (1<<i)) {
         \hfill%
         \begin{column}{.55\textwidth}
             \begin{figure}
-\tikzset{
-  treenode/.style = {align=center, inner sep=0pt, text centered,
-    font=\sffamily},
-  vertex/.style = {treenode, circle, white, font=\sffamily\bfseries\tiny, draw=white, text width=1.8em},% arbre rouge noir, noeud noir
-  rvertex/.style = {treenode, circle, white, font=\sffamily\bfseries\tiny, draw=red, text width=1.8em},% arbre rouge noir, noeud noir
-}
-
-\begin{tikzpicture}[->,>=stealth',level/.style={sibling distance = 5cm/#1,
+                \begin{tikzpicture}[->,>=stealth',level/.style={sibling distance = 5cm/#1,
   level distance = 1.8cm},scale=0.6] 
 \node [rvertex] {33, 14}
     child{ node [vertex] {15, {\color{red}5}}
@@ -639,6 +577,58 @@ if (x & (1<<i)) {
     \end{columns}
 \end{frame}
 
+% \begin{frame}[fragile]{Augmenting Binary Search Trees}
+%
+%     \begin{columns}[T]
+%         \begin{column}{.45\textwidth}
+%             \bi
+%                 \item Count number of elements $<38$
+%                     \bi
+%                         \item Search for $38$ in the tree
+%                         \item Count the vertices that we pass by that are less than $x$
+%                         \item When we are at a vertex where we should go right, get the size of the left subtree and add it to our count
+%                     \ei
+%                 % \vspace{2pt}
+%                 % \item Time complexity $O(\log n)$
+%             \ei
+%         \end{column}%
+%         \hfill%
+%         \begin{column}{.55\textwidth}
+%             \begin{figure}
+%
+% \begin{tikzpicture}[->,>=stealth',level/.style={sibling distance = 5cm/#1,
+%   level distance = 1.8cm},scale=0.6] 
+% \node [rvertex] {33, 14}
+%     child{ node [vertex] {15, {\color{red}5}}
+%             child{ node [vertex] {10, 2} 
+%             	child{ node [vertex] {5, 1} } %for a named pointer
+%                 % child{ node [vertex] {}}
+%             }
+%             child{ node [vertex] {20, 2}
+% 							child{ node [vertex] {18, 1}}
+% 							% child{ node [vertex] {}}
+%             }                            
+%     }
+%     child{ node [rvertex] {47, 8}
+%             child{ node [rvertex] {38, 5} 
+%                             child{ node [vertex] {36, {\color{red}3}}
+%                                 child { node [vertex] {34, 1} }
+%                                 child { node [vertex] {37, 1} }
+%                             }
+% 							child{ node [vertex] {39, 1}}
+%             }
+%             child{ node [vertex] {51, 2}
+% 							child{ node [vertex] {49, 1}}
+% 							% child{ node [vertex] {}}
+%             }
+% 		}
+% ; 
+% \end{tikzpicture}
+%             \end{figure}
+%         \end{column}%
+%     \end{columns}
+% \end{frame}
+
 \begin{frame}[fragile]{Augmenting Binary Search Trees}
 
     \begin{columns}[T]
@@ -657,13 +647,6 @@ if (x & (1<<i)) {
         \hfill%
         \begin{column}{.55\textwidth}
             \begin{figure}
-\tikzset{
-  treenode/.style = {align=center, inner sep=0pt, text centered,
-    font=\sffamily},
-  vertex/.style = {treenode, circle, white, font=\sffamily\bfseries\tiny, draw=white, text width=1.8em},% arbre rouge noir, noeud noir
-  rvertex/.style = {treenode, circle, white, font=\sffamily\bfseries\tiny, draw=red, text width=1.8em},% arbre rouge noir, noeud noir
-}
-
 \begin{tikzpicture}[->,>=stealth',level/.style={sibling distance = 5cm/#1,
   level distance = 1.8cm},scale=0.6] 
 \node [vertex] {33, 14}
@@ -707,7 +690,7 @@ if (x & (1<<i)) {
                         \item We're on a vertex whose left subtree is of size $m$
                         \item If $k = m+1$, we found it
                         \item If $k \leq m$, look for the $k$th smallest element in the left subtree
-                        \item If $k > m+1$, look for the $m-k-1$st smallest element in the right subtree
+                        \item If $k > m+1$, look for the $k-m-1$st smallest element in the right subtree
                     \ei
                 \item Example: $k=11$
             \ei
@@ -715,13 +698,6 @@ if (x & (1<<i)) {
         \hfill%
         \begin{column}{.55\textwidth}
             \begin{figure}
-\tikzset{
-  treenode/.style = {align=center, inner sep=0pt, text centered,
-    font=\sffamily},
-  vertex/.style = {treenode, circle, white, font=\sffamily\bfseries\tiny, draw=white, text width=1.8em},% arbre rouge noir, noeud noir
-  rvertex/.style = {treenode, circle, white, font=\sffamily\bfseries\tiny, draw=red, text width=1.8em},% arbre rouge noir, noeud noir
-}
-
 \begin{tikzpicture}[->,>=stealth',level/.style={sibling distance = 5cm/#1,
   level distance = 1.8cm},scale=0.6] 
 \node [rvertex] {33, 14}
@@ -775,7 +751,6 @@ if (x & (1<<i)) {
     \ei
 \end{frame}
 
-% TODO: also show directed and weighted versions
 \begin{frame}[fragile]{Adjacency list}
 
     \begin{columns}[T]
@@ -793,7 +768,7 @@ adj[1].push_back(0);
 adj[1].push_back(2);
 adj[2].push_back(0);
 adj[2].push_back(1);
-adj[2].push_back(2);
+adj[2].push_back(3);
 adj[3].push_back(2);
             \end{minted}
         \end{column}%
@@ -929,10 +904,15 @@ edges.push_back(make_pair(2, 3));
     \ei
 \end{frame}
 
-\begin{frame}{Example problem: Easy Problem from Rujia Liu?}
+% \begin{frame}{Example problem: Easy Problem from Rujia Liu?}
+%     \bi
+%         \item http://uva.onlinejudge.org/external/119/11991.html
+%         % \item http://uva.onlinejudge.org/external/120/12049.html
+%     \ei
+% \end{frame}
+\begin{frame}{Example problem: Grandpa Bernie}
     \bi
-        \item http://uva.onlinejudge.org/external/119/11991.html
-        % \item http://uva.onlinejudge.org/external/120/12049.html
+        \item https://open.kattis.com/problems/grandpabernie
     \ei
 \end{frame}
 

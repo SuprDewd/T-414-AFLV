@@ -1,71 +1,29 @@
-\documentclass[12pt,t]{beamer}
-\usepackage{graphicx}
-\setbeameroption{hide notes}
-\setbeamertemplate{note page}[plain]
-
-% get rid of junk
-\usetheme{default}
-\beamertemplatenavigationsymbolsempty
-\hypersetup{pdfpagemode=UseNone} % don't show bookmarks on initial view
-
-% font
-\usepackage{fontspec}
-\setsansfont{TeX Gyre Heros}
-\setbeamerfont{note page}{family*=pplx,size=\footnotesize} % Palatino for notes
-% "TeX Gyre Heros can be used as a replacement for Helvetica"
-% In Unix, unzip the following into ~/.fonts
-% In Mac, unzip it, double-click the .otf files, and install using "FontBook"
-%   http://www.gust.org.pl/projects/e-foundry/tex-gyre/heros/qhv2.004otf.zip
-
-% named colors
-\definecolor{offwhite}{RGB}{249,242,215}
-\definecolor{foreground}{RGB}{255,255,255}
-\definecolor{background}{RGB}{24,24,24}
-\definecolor{title}{RGB}{107,174,214}
-\definecolor{gray}{RGB}{155,155,155}
-\definecolor{subtitle}{RGB}{102,255,204}
-\definecolor{hilight}{RGB}{102,255,204}
-\definecolor{vhilight}{RGB}{255,111,207}
-\definecolor{lolight}{RGB}{155,155,155}
-%\definecolor{green}{RGB}{125,250,125}
-
-% use those colors
-\setbeamercolor{titlelike}{fg=title}
-\setbeamercolor{subtitle}{fg=subtitle}
-\setbeamercolor{institute}{fg=gray}
-\setbeamercolor{normal text}{fg=foreground,bg=background}
-\setbeamercolor{item}{fg=foreground} % color of bullets
-\setbeamercolor{subitem}{fg=gray}
-\setbeamercolor{itemize/enumerate subbody}{fg=gray}
-\setbeamertemplate{itemize subitem}{{\textendash}}
-\setbeamerfont{itemize/enumerate subbody}{size=\footnotesize}
-\setbeamerfont{itemize/enumerate subitem}{size=\footnotesize}
-
-% page number
-\setbeamertemplate{footline}{%
-    \raisebox{5pt}{\makebox[\paperwidth]{\hfill\makebox[20pt]{\color{gray}
-          \scriptsize\insertframenumber}}}\hspace*{5pt}}
-
-% add a bit of space at the top of the notes page
-\addtobeamertemplate{note page}{\setlength{\parskip}{12pt}}
+\documentclass[10pt]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usetheme{metropolis}
+\usepackage{booktabs}
+\usepackage[scale=2]{ccicons}
+\usepackage{pgfplots}
+\usepgfplotslibrary{dateplot}
+\usepackage{xspace}
+\usepackage{pbox}
+\usepackage{colortbl}
 
 % a few macros
 \newcommand{\bi}{\begin{itemize}}
 \newcommand{\ei}{\end{itemize}}
 \newcommand{\ig}{\includegraphics}
-\newcommand{\subt}[1]{{\footnotesize \color{subtitle} {#1}}}
-
+\definecolor{hilight}{RGB}{235,129,27}
+% \definecolor{vhilight}{RGB}{235,129,27}
+\definecolor{vhilight}{RGB}{200,80,20}
 
 % title info
 \title{Data structures}
-\author{Bjarki Ágúst Guðmundsson \\ Tómas Ken Magnússon}
+\author{Bjarki Ágúst Guðmundsson\\ Tómas Ken Magnússon}
 \institute{\href{http://ru.is/td}{School of Computer Science} \\[2pt] \href{http://ru.is}{Reykjavík University}}
-\date{Árangursrík forritun og lausn verkefna}
-% \date{\href{http://www.biostat.wisc.edu/~kbroman}{\tt \scriptsize biostat.wisc.edu/{\textasciitilde}kbroman}
-% \\[-4pt]
-% \href{http://github.com/kbroman}{\tt \scriptsize github.com/kbroman}
-% }
-
+\titlegraphic{\hfill\includegraphics[height=0.6cm]{kattis}}
+\date{\textbf{Árangursrík forritun og lausn verkefna}}
 
 % Tikz
 \usepackage{tikz}
@@ -73,41 +31,39 @@
 
 % Minted
 \usepackage{minted}
-\usemintedstyle{monokai}
+\usemintedstyle{manni}
 \newminted{cpp}{fontsize=\footnotesize}
 
 % Graph styles
 \tikzstyle{vertex}=[circle,fill=black!50,minimum size=15pt,inner sep=0pt, font=\small]
-\tikzstyle{selected vertex} = [vertex, thick, draw=vhilight]
+\tikzstyle{selected vertex} = [vertex, fill=red!24]
 \tikzstyle{edge} = [draw,thick,-]
 \tikzstyle{dedge} = [draw,thick,->]
 \tikzstyle{weight} = [font=\scriptsize,pos=0.5]
 \tikzstyle{selected edge} = [draw,line width=2pt,-,red!50]
 \tikzstyle{ignored edge} = [draw,line width=5pt,-,black!20]
 
-
-\begin{document}
-
-% title slide
-{
-    \setbeamertemplate{footline}{} % no page number here
-    \frame{
-        \titlepage
-    }
+\tikzset{
+  treenode/.style = {align=center, inner sep=0pt, text centered,
+    font=\sffamily},
+  vertex/.style = {treenode, circle, black, font=\sffamily\bfseries\tiny, draw=black, text width=1.8em},% arbre rouge noir, noeud noir
+  rvertex/.style = {treenode, circle, black, font=\sffamily\bfseries\tiny, draw=red, text width=1.8em},% arbre rouge noir, noeud noir
 }
 
+\begin{document}
+\maketitle
 
 \begin{frame}{Today we're going to cover}
     \vspace{40pt}
     \bi
         \item Review the Union-Find data structure, and look at applications
         \item Study range queries
+        \item Quick look at Square Root Decomposition
         \item Learn about Segment Trees
         % \item Learn about Fenwick Trees
     \ei
 \end{frame}
 
-% TODO: Union-Find
 \begin{frame}[fragile]{Union-Find}
     \vspace{20pt}
     \bi
@@ -343,13 +299,17 @@ for (int i = 0; i < MAXN; i++) p[i] = i;
     \ei
 \end{frame}
 
-\begin{frame}{Example problem: Friends}
+% \begin{frame}{Example problem: Friends}
+%     \bi
+%         \item http://uva.onlinejudge.org/external/106/10608.html
+%     \ei
+% \end{frame}
+\begin{frame}{Example problem: Where's My Internet??}
     \bi
-        \item http://uva.onlinejudge.org/external/106/10608.html
+        \item https://open.kattis.com/problems/wheresmyinternet
     \ei
 \end{frame}
 
-% TODO: Range queries
 \begin{frame}{Range queries}
     \vspace{30pt}
     \bi
@@ -365,7 +325,6 @@ for (int i = 0; i < MAXN; i++) p[i] = i;
     \ei
 \end{frame}
 
-% TODO: Range sum on a static array
 \begin{frame}{Range sum on a static array}
     \bi
         \item Let's look at range sums on a static array (i.e.\ updating is not supported)
@@ -445,7 +404,6 @@ for (int i = 0; i < MAXN; i++) p[i] = i;
     \ei
 \end{frame}
 
-% TODO: Range queries on a dynamic array
 \begin{frame}{Range sum on a dynamic array}
     \bi
         \item What if we want to support:
@@ -472,7 +430,135 @@ for (int i = 0; i < MAXN; i++) p[i] = i;
     \ei
 \end{frame}
 
-\begin{frame}[fragile]{Segment Tree}
+% TODO: Add square root decomposition?
+\begin{frame}{First attempt: Buckets}
+    \bi
+        \item Group values into buckets of size $k$
+        \item E.g.\ $k=2$:
+    \ei
+
+    \begin{center}
+        \only<1>{
+            \begin{tabular}{|c|c|c|c|c|c|c|}
+                \hline
+                1 & 0 & 7 & 8 & 5 & 9 & 3 \\
+                \hline
+            \end{tabular}
+        }
+        \only<2->{
+            \begin{tabular}{|c|c!{\color{red}\vrule width 2pt}c|c!{\color{red}\vrule width 2pt}c|c!{\color{red}\vrule width 2pt}c|}
+                \hline
+                1 & 0 & 7 & 8 & 5 & 9 & 3 \\
+                \hline
+            \end{tabular}
+        }
+    \end{center}
+    \bi
+        \item<3-> There are roughly $n/k$ buckets
+        \item<4-> Store the sum of elements inside each bucket:
+    \ei
+    \begin{center}
+        \only<5->{
+            \begin{tabular}{|c|c|c|c|}
+                \hline
+                1 & 15 & 14 & 3 \\
+                \hline
+            \end{tabular}
+        }
+    \end{center}
+\end{frame}
+\begin{frame}{Buckets: Updating}
+
+    \begin{center}
+        \begin{tabular}{|c|c!{\color{red}\vrule width 2pt}c|c!{\color{red}\vrule width 2pt}c|c!{\color{red}\vrule width 2pt}c|}
+            \hline
+            1 & 0 & \color<6>{vhilight}{7} & \color<3,4,6>{vhilight}{\only<-3>{8}\only<4->{-2}} & 5 & 9 & 3 \\
+            \hline
+        \end{tabular}
+    \end{center}
+    \begin{center}
+        \begin{tabular}{|c|c|c|c|}
+            \hline
+            1 & \color<5,6,7>{vhilight}{\only<-6>{15}\only<7->{5}} & 14 & 3 \\
+            \hline
+        \end{tabular}
+    \end{center}
+    \bi
+        \item Updating is easy:
+            \bi
+                \item change the array element
+                \item recompute corresponding bucket
+            \ei
+        \item<2-> $\mathrm{update}(3,-2)$
+        \item<8-> Time complexity: $O(k)$
+        \item<9-> Easy to do in $O(1)$, but doesn't really matter (we'll see why)
+    \ei
+\end{frame}
+\begin{frame}{Buckets: Querying}
+    \begin{center}
+        \begin{tabular}{|c|c!{\color{red}\vrule width 2pt}c|c!{\color{red}\vrule width 2pt}c|c!{\color{red}\vrule width 2pt}c|}
+            \hline
+            1 & \color<2->{vhilight}{0} & \color<2>{vhilight}{7} & \color<2>{vhilight}{8} & \color<2>{vhilight}{5} & \color<2>{vhilight}{9} & 3 \\
+            \hline
+        \end{tabular}
+    \end{center}
+    \begin{center}
+        \begin{tabular}{|c|c|c|c|}
+            \hline
+            1 & \color<3->{vhilight}{15} & \color<3->{vhilight}{14} & 3 \\
+            \hline
+        \end{tabular}
+    \end{center}
+    \bi
+        \item Again we want to query over a range
+            \bi
+                \item When a bucket is contained in the range, use the stored sum for the bucket
+                \item This (sometimes) allows us to ``jump'' over intervals of size $k$
+            \ei
+        \item<2-> $\mathrm{query}(1,5)\onslide<4->{= 0 + 15 + 14 = 29}$
+        \item<5-> What about time complexity?
+            \bi
+                \item<6-> Only have to go inside at most two buckets (each end)
+                \item<7-> Have to consider at most $n/k$ buckets
+                \item<8-> In total roughly $n/k + 2k$
+                \item<9-> Time complexity: $O(n/k + k)$
+            \ei
+    \ei
+\end{frame}
+\begin{frame}{Buckets: Choosing $k$}
+    \bi
+        \item Now we have a data structure that supports:
+            \bi
+                \item Updating in $O(k)$
+                \item Querying in $O(n/k + k)$
+            \ei
+        \item What $k$ to pick?
+        \item<2-> Time complexity is minimized for $k=\sqrt{n}$:
+            \bi
+                \item Updating in $O(\sqrt{n})$
+                \item Querying in $O(n/\sqrt{n} + \sqrt{n}) = O(\sqrt{n})$
+            \ei
+        \item<3-> Also known as square root decomposition, and is a very
+            powerful technique
+    \ei
+\end{frame}
+
+\begin{frame}{Example problem: Supercomputer}
+    \bi
+        \item https://open.kattis.com/problems/supercomputer
+    \ei
+\end{frame}
+
+\begin{frame}{Range queries}
+    \bi
+        \item Now we know how to do these queries in $O(\sqrt{n})$
+        \item May be too slow if $n$ is large and many queries
+        \vspace{10pt}
+        \item Can we do better?
+    \ei
+\end{frame}
+
+\begin{frame}[fragile]{Second attempt: Segment Tree}
             \begin{figure}
                 \begin{tikzpicture}[scale=1.8,auto,swap]
                     \onslide<2->{
@@ -893,22 +979,16 @@ int update(segment_tree *tree, int i, int val) {
     \ei
 \end{frame}
 
-\begin{frame}{Example problem: Potentiometers}
-    \bi
-        \item http://uva.onlinejudge.org/external/120/12086.html
-    \ei
-\end{frame}
-
-% TODO: decide if we should talk about Fenwick Trees
-% TODO: Fenwick trees
-% \begin{Fenwick Tree}{}
-
-% TODO: Example problems
-% \begin{frame}{Example problem: TODO}
+% \begin{frame}{Example problem: Potentiometers}
 %     \bi
-%         \item TODO
+%         \item http://uva.onlinejudge.org/external/120/12086.html
 %     \ei
 % \end{frame}
+\begin{frame}{Example problem: Supercomputer}
+    \bi
+        \item https://open.kattis.com/problems/supercomputer
+    \ei
+\end{frame}
 
 \end{document}
 

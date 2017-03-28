@@ -9,3 +9,9 @@ supporting material can be found in this repository, inside the respective
 directories. All problems are available on the [Open
 Kattis](https://open.kattis.com/) online judge.
 
+## Editions
+The course has been held twice, with mostly different problem sets each time:
+
+- [2016](https://github.com/SuprDewd/T-414-AFLV/tree/2016)
+- [2014](https://github.com/SuprDewd/T-414-AFLV/tree/2014)
+

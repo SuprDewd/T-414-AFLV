@@ -2,6 +2,10 @@
 
 Introduces greedy algorithms, and covers coin changing, interval scheduling, and scheduling to minimize lateness.
 
+<h4>Material</h4>
+<ul>
+	<li>Lecture slides: <a href="http://www.cs.princeton.edu/~wayne/kleinberg-tardos/pdf/04GreedyAlgorithmsI.pdf">PDF</a></li>
+</ul>
 <h4>Problems</h4>
 Solve some of the following problems on Kattis. You need <b>3</b> points to get full score.
 <ul>

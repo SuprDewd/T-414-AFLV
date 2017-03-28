@@ -2,6 +2,10 @@
 
 Covers maximum flow, minimum cut, bipartite matching, and other applications.
 
+<h4>Material</h4>
+<ul>
+	<li>Lecture slides: <a href="http://www.cs.princeton.edu/~wayne/kleinberg-tardos/pdf/07NetworkFlowI.pdf">PDF 1</a>, <a href="http://www.cs.princeton.edu/~wayne/kleinberg-tardos/pdf/07NetworkFlowII.pdf">PDF 2</a></li>
+</ul>
 <h4>Problems</h4>
 Solve some of the following problems on Kattis. You need <b>3</b> points to get full score.
 <ul>

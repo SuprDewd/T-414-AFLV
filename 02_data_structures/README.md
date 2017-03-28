@@ -2,7 +2,7 @@
 
 Reviews the most basic data types and data structures. Covers how to represent big integers, sets and graphs, and how to augment binary search trees.
 
-<h4>Problems</h4>
+<h2>Problems</h2>
 Solve some of the following problems on Kattis. You need <b>5</b> points to get full score.
 <ul>
 	<li><a href="https://open.kattis.com/problems/haypoints">Hay Points</a> (1 point)</li>
@@ -11,7 +11,7 @@ Solve some of the following problems on Kattis. You need <b>5</b> points to get 
 	<li><a href="https://open.kattis.com/problems/phonelist">Phone List</a> (2 points)</li>
 	<li><a href="https://open.kattis.com/problems/cookieselection">Cookie Selection</a> (2 points)</li>
 </ul>
-<h4>Bonus problems</h4>
+<h2>Bonus problems</h2>
 If you want a challenge, you can try solving the following bonus problems.
 <ul>
 	<li><a href="https://open.kattis.com/problems/trendingtopic">Trending Topic</a></li>

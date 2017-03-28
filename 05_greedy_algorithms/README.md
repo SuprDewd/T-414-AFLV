@@ -2,11 +2,11 @@
 
 Introduces greedy algorithms, and covers coin changing, interval scheduling, and scheduling to minimize lateness.
 
-<h4>Material</h4>
+<h2>Material</h2>
 <ul>
 	<li>Lecture slides: <a href="http://www.cs.princeton.edu/~wayne/kleinberg-tardos/pdf/04GreedyAlgorithmsI.pdf">PDF</a></li>
 </ul>
-<h4>Problems</h4>
+<h2>Problems</h2>
 Solve some of the following problems on Kattis. You need <b>3</b> points to get full score.
 <ul>
 	<li><a href="https://open.kattis.com/problems/virus">Virus Replication</a> (1 point)</li>
@@ -15,7 +15,7 @@ Solve some of the following problems on Kattis. You need <b>3</b> points to get 
 	<li><a href="https://open.kattis.com/problems/bank">Bank Queue</a> (1 point)</li>
 	<li><a href="https://open.kattis.com/problems/piano">Moving Pianos</a> (1 point)</li>
 </ul>
-<h4>Bonus problems</h4>
+<h2>Bonus problems</h2>
 If you want a challenge, you can try solving the following bonus problems.
 <ul>
 	<li><a href="https://open.kattis.com/problems/equilibrium">Equilibrium Mobile</a></li>

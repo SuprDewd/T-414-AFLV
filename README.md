@@ -18,5 +18,6 @@ The course has been held twice, with mostly different problem sets each time:
 ## Adoption
 The course (material) has been adopted (and adapted) by a few external sites, including:
 - Ulm University, Germany
+- Universidad Mayor de San Simón, Bolivia
 
 Do you know of a site not listed here? I would be happy to hear about it.

@@ -15,3 +15,8 @@ The course has been held twice, with mostly different problem sets each time:
 - [2016](https://github.com/SuprDewd/T-414-AFLV/tree/2016)
 - [2014](https://github.com/SuprDewd/T-414-AFLV/tree/2014)
 
+## Adoption
+The course (material) has been adopted (and adapted) by a few external sites, including:
+- Ulm University, Germany
+
+Do you know of a site not listed here? I would be happy to hear about it.

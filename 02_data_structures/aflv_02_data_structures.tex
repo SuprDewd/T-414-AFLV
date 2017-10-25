@@ -16,10 +16,9 @@
 
 % title info
 \title{Data structures and libraries}
-\author{Bjarki Ágúst Guðmundsson\\ Tómas Ken Magnússon}
-\institute{\href{http://ru.is/td}{School of Computer Science} \\[2pt] \href{http://ru.is}{Reykjavík University}}
-\titlegraphic{\hfill\includegraphics[height=0.6cm]{kattis}}
-\date{\textbf{Árangursrík forritun og lausn verkefna}}
+\author{Computer Science Enrichment Club - Algorithms Division}
+\titlegraphic{\hfill\includegraphics[height=0.6cm]{csec}}
+\date{\textbf{October 19, 2017}}
 
 % Tikz
 \usepackage{tikz}
@@ -253,6 +252,8 @@
     \ei
 \end{frame}
 
+
+
 \begin{frame}[fragile]{Representing sets}
     \vspace{5pt}
     \bi
@@ -295,6 +296,17 @@ if (x & (1<<i)) {
         \item Allows for easily using a set as an index of an array (we'll see this later)
     \ei
 \end{frame}
+
+\begin{frame}{Applications of representing sets}
+    \vspace{40pt}
+    \bi
+        \item Most problems require storing data, usually in an array
+        \item Makes a some problems simpler.  
+        \item \href{http://wcipeg.com/problem/ccc11s5}{http://wcipeg.com/problem/ccc11s5} - \href{https://gist.github.com/wgma00/a9eb7deddfc50b546cd600324f773450}{solution}
+        \item \href{http://wcipeg.com/problem/dwitesep09p4}{http://wcipeg.com/problem/dwitesep09p4} - \href{https://gist.github.com/wgma00/b86540ace0a8d664ef57fd6c4df9708f}{solution}
+    \ei
+\end{frame}
+
 
 \begin{frame}{Applications of Arrays and Linked Lists}
     \vspace{40pt}
@@ -917,4 +929,5 @@ edges.push_back(make_pair(2, 3));
 \end{frame}
 
 \end{document}
+
 

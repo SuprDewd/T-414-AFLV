@@ -7,7 +7,7 @@ Solve some of the following problems on Kattis. You need <b>5</b> points to get 
     <li><a href="https://open.kattis.com/problems/flexible">Flexible Spaces</a> (1 point)</li>
     <li><a href="https://open.kattis.com/problems/secretmessage">Secret Message</a> (1 point)</li>
     <li><a href="https://open.kattis.com/problems/permutationencryption">Permutation encryption</a> (2 points)</li>
-    <li><a href="https://open.kattis.com/problems/collatz">Collatz Conjecture</a> (2 points)</li>
+    <li><del><a href="https://open.kattis.com/problems/collatz">Collatz Conjecture</a> (2 points)</li></del>
     <li><a href="https://open.kattis.com/problems/cross">Cross</a> (3 points)</li>
 </ul>
 <h2>Bonus problems</h2>
